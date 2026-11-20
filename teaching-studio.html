@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Teaching Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#060B1A;--maroon:#7A1626;--gold:#D9B45A;--page:#FAFAF9;--line:#D5D8DE;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--navy);font-family:"DM Sans",Arial,sans-serif;font-size:17px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.skip{position:absolute;left:-999px;top:0;background:var(--white);color:var(--navy);padding:12px 16px;z-index:10}
+.skip:focus{left:8px;top:8px}
+:focus-visible{outline:3px solid var(--navy);box-shadow:0 0 0 6px var(--gold);border-radius:4px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--maroon);margin:0}
+h1,h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;margin:0}
+h1{font-weight:800;font-size:clamp(32px,5vw,54px);line-height:1.05;margin-top:10px}
+h1 span{color:var(--maroon)}
+header{padding:40px 0 24px}
+.lede{max-width:640px;margin:14px 0 0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));border:1px solid var(--line);background:var(--white);margin:0 0 28px;padding:0;list-style:none}
+.steps li{padding:18px 20px;border-right:1px solid var(--line);display:flex;gap:14px;align-items:center}
+.steps li:last-child{border-right:0}
+.num{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:800;font-size:40px;line-height:1;color:var(--maroon)}
+.band{background:var(--navy);color:var(--white);padding:26px 0 34px}
+.band .eyebrow{color:var(--gold)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.group{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-right:14px;margin-right:4px;border-right:1px solid rgba(255,255,255,.25)}
+.group:last-child{border-right:0}
+button,.btn,select{font:inherit;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--white);background:transparent;color:var(--white);cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+select{background:var(--navy)}
+button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.primary{background:var(--maroon);border-color:var(--maroon);color:var(--white)}
+.sw{width:44px;min-height:44px;padding:0;justify-content:center;border-color:transparent}
+.sw i{display:block;width:26px;height:26px;border-radius:50%;border:2px solid var(--white)}
+.sw[aria-pressed="true"]{background:transparent;border-color:var(--gold)}
+label{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+input[type=range]{width:110px;min-height:44px}
+input[type=text]{font:inherit;min-height:44px;padding:0 14px;border:1px solid var(--white);border-radius:8px;background:var(--white);color:var(--navy);width:min(320px,100%)}
+.file{position:absolute;width:1px;height:1px;opacity:0}
+.file:focus-visible + .btn{outline:3px solid var(--white);box-shadow:0 0 0 6px var(--gold)}
+#stage{display:block;width:100%;height:auto;aspect-ratio:16/9;background:var(--white);border-radius:6px;margin-top:18px;touch-action:none;cursor:crosshair}
+.status{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:16px}
+.pill{border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:inline-flex;gap:8px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;background:#8a8f99}
+.rec .dot{background:#FF5A5A}
+#timer{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:800;font-size:24px}
+.meter{width:120px;height:10px;border:1px solid var(--white);border-radius:999px;overflow:hidden}
+.meter b{display:block;height:100%;width:0;background:var(--gold)}
+#msg{margin:12px 0 0;min-height:1.5em}
+#result{padding:36px 0 48px}
+#result h2{font-weight:800;font-size:30px;margin-top:8px}
+.card{background:var(--white);border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.08);padding:22px;margin-top:18px;display:grid;gap:18px;grid-template-columns:minmax(0,3fr) minmax(220px,2fr)}
+.card video{width:100%;background:#000;border-radius:4px}
+.card .btn,.card button{border-color:var(--navy);color:var(--navy)}
+.card .primary{color:var(--white);border-color:var(--maroon)}
+.card ul{padding-left:20px;margin:12px 0}
+textarea{font:inherit;width:100%;padding:10px 14px;border:1px solid var(--navy);border-radius:8px;background:var(--white);color:var(--navy);margin-top:6px}
+textarea[readonly]{background:#E9ECF1}
+details{border:1px solid var(--line);background:var(--white);padding:16px 20px;margin:0 0 48px}
+summary{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;min-height:44px;display:flex;align-items:center}
+details label{color:var(--navy)}
+details button{border-color:var(--navy);color:var(--navy)}
+details input[type=text]{border-color:var(--navy);width:100%;margin-top:6px}
+#cam{position:fixed;width:2px;height:2px;opacity:0;pointer-events:none;left:0;bottom:0}
+[hidden]{display:none!important}
+@media (max-width:760px){.card{grid-template-columns:1fr}.steps li{border-right:0;border-bottom:1px solid var(--line)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#studio">Skip to the studio</a>
+<header class="wrap">
+  <p class="eyebrow">Student recording studio</p>
+  <h1>Teach it on the <span>whiteboard</span></h1>
+  <p class="lede">Draw and explain a topic out loud. Your drawing, your camera and your voice are saved together as one video.</p>
+</header>
+<div class="wrap">
+  <ol class="steps">
+    <li><span class="num" aria-hidden="true">01</span><span>Turn on your camera and microphone.</span></li>
+    <li><span class="num" aria-hidden="true">02</span><span>Press Record, then draw and teach.</span></li>
+    <li><span class="num" aria-hidden="true">03</span><span>Download the video and turn it in.</span></li>
+  </ol>
+</div>
+<main id="studio" tabindex="-1">
+  <section class="band" aria-labelledby="boardhead">
+    <div class="wrap">
+      <p class="eyebrow" id="boardhead">Your whiteboard</p>
+      <div style="margin-top:14px">
+        <label for="problem">Problem</label>
+        <textarea id="problem" rows="2" placeholder="Type the problem you are solving. It shows at the top of the board and in the video."></textarea>
+      </div>
+      <div class="row" role="toolbar" aria-label="Drawing tools">
+        <div class="group">
+          <button type="button" data-tool="pen" aria-pressed="true">Pen</button>
+          <button type="button" data-tool="hi" aria-pressed="false">Highlighter</button>
+          <button type="button" data-tool="eraser" aria-pressed="false">Eraser</button>
+        </div>
+        <div class="group" id="colors">
+          <button type="button" class="sw" data-color="#111111" aria-label="Black" aria-pressed="true"><i style="background:#111111"></i></button>
+          <button type="button" class="sw" data-color="#1D4ED8" aria-label="Blue" aria-pressed="false"><i style="background:#1D4ED8"></i></button>
+          <button type="button" class="sw" data-color="#C81E1E" aria-label="Red" aria-pressed="false"><i style="background:#C81E1E"></i></button>
+          <button type="button" class="sw" data-color="#15803D" aria-label="Green" aria-pressed="false"><i style="background:#15803D"></i></button>
+          <button type="button" class="sw" data-color="#7E22CE" aria-label="Purple" aria-pressed="false"><i style="background:#7E22CE"></i></button>
+        </div>
+        <div class="group">
+          <label for="size">Size</label>
+          <input type="range" id="size" min="2" max="14" value="4">
+        </div>
+        <div class="group">
+          <button type="button" id="undo">Undo</button>
+          <button type="button" id="clear">Clear board</button>
+          <input class="file" type="file" id="pic" accept="image/*">
+          <label class="btn" for="pic">Add a picture</label>
+          <button type="button" id="nopic" hidden>Remove picture</button>
+        </div>
+      </div>
+      <canvas id="stage" width="1280" height="720" role="img" aria-label="Whiteboard. Draw with a mouse, finger or stylus."></canvas>
+      <div class="row" aria-label="Recording controls" role="group">
+        <div class="group">
+          <button type="button" id="enable" class="primary">Turn on camera and mic</button>
+          <button type="button" id="camtoggle" aria-pressed="true" disabled>Show camera</button>
+          <label for="campos">Camera spot</label>
+          <select id="campos">
+            <option value="br">Bottom right</option>
+            <option value="bl">Bottom left</option>
+            <option value="tr">Top right</option>
+            <option value="tl">Top left</option>
+          </select>
+        </div>
+        <div class="group">
+          <label for="limit">Time limit</label>
+          <select id="limit">
+            <option value="120">2 minutes</option>
+            <option value="180">3 minutes</option>
+            <option value="300" selected>5 minutes</option>
+            <option value="600">10 minutes</option>
+          </select>
+        </div>
+        <div class="group">
+          <button type="button" id="record" class="primary">Record</button>
+          <button type="button" id="pause" disabled>Pause</button>
+          <button type="button" id="stop" disabled>Stop</button>
+        </div>
+      </div>
+      <div class="status">
+        <span class="pill" id="pill"><span class="dot" aria-hidden="true"></span><span id="pilltext">Not recording</span></span>
+        <span id="timer" aria-label="Recording time">0:00</span>
+        <span class="pill"><span id="mictext">Mic off</span><span class="meter" aria-hidden="true"><b id="level"></b></span></span>
+      </div>
+      <p id="msg" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+  <section id="result" class="wrap" aria-labelledby="resulthead" hidden>
+    <p class="eyebrow">Step 03</p>
+    <h2 id="resulthead" tabindex="-1">Your video is ready</h2>
+    <div class="card">
+      <video id="preview" controls playsinline></video>
+      <div>
+        <label for="title" style="color:var(--navy)">Name your video</label><br>
+        <input type="text" id="title" placeholder="Topic and your initials" style="border-color:var(--navy);margin-top:6px">
+        <ul>
+          <li>Watch it once to check the sound.</li>
+          <li>Download it as a video file or as one web page.</li>
+          <li>Upload that file to the assignment.</li>
+        </ul>
+        <p id="size-note"></p>
+        <div class="row">
+          <a id="dl" class="btn primary" href="#" download>Download video</a>
+          <button type="button" id="dlhtml">Download as one page</button>
+          <button type="button" id="again">Record again</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="wrap">
+    <details>
+      <summary>For the instructor: make a problem link</summary>
+      <label for="linkproblem">Problem to show on the board</label>
+      <textarea id="linkproblem" rows="3"></textarea>
+      <div class="row">
+        <button type="button" id="makelink">Make link</button>
+        <button type="button" id="copylink" disabled>Copy link</button>
+      </div>
+      <label for="linkout" style="display:block;margin-top:14px">Link to give students</label>
+      <input type="text" id="linkout" readonly>
+    </details>
+  </div>
+</main>
+<video id="cam" playsinline muted aria-hidden="true" tabindex="-1"></video>
+<script>
+(function(){
+  var W=1280,H=720;
+  function $(id){return document.getElementById(id)}
+  var stage=$('stage'),ctx=stage.getContext('2d'),cam=$('cam');
+  var ink=document.createElement('canvas');ink.width=W;ink.height=H;
+  var ictx=ink.getContext('2d');
+  var tool='pen',color='#111111',size=4,strokes=[],live=null,bgImg=null;
+  var media=null,camOn=false,analyser=null,levelData=null;
+  var rec=null,chunks=[],state='idle',base=0,startT=0,elapsed=0,blobUrl=null,lastBlob=null,ext='webm';
+  var probLines=[],barH=0,PFONT='600 26px "Plus Jakarta Sans",Arial,sans-serif';
+
+  function say(t){$('msg').textContent=t}
+
+  /* drawing */
+  function drawStroke(c,s){
+    var p=s.pts;c.save();c.lineCap='round';c.lineJoin='round';
+    if(s.tool==='eraser'){c.globalCompositeOperation='destination-out';c.lineWidth=s.size*5;c.strokeStyle='#000'}
+    else if(s.tool==='hi'){c.globalAlpha=.35;c.lineWidth=s.size*5;c.strokeStyle=s.color}
+    else{c.lineWidth=s.size;c.strokeStyle=s.color}
+    c.beginPath();c.moveTo(p[0].x,p[0].y);
+    if(p.length===1)c.lineTo(p[0].x+.01,p[0].y);
+    for(var i=1;i<p.length;i++)c.lineTo(p[i].x,p[i].y);
+    c.stroke();c.restore();
+  }
+  function redraw(){ictx.clearRect(0,0,W,H);strokes.forEach(function(s){drawStroke(ictx,s)})}
+  function pos(e){var r=stage.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+  stage.addEventListener('pointerdown',function(e){
+    if(e.button)return;
+    stage.setPointerCapture(e.pointerId);
+    live={tool:tool,color:color,size:size,pts:[pos(e)]};
+    if(tool!=='hi')drawStroke(ictx,live);
+    e.preventDefault();
+  });
+  stage.addEventListener('pointermove',function(e){
+    if(!live)return;
+    var p=pos(e),a=live.pts[live.pts.length-1];
+    live.pts.push(p);
+    if(live.tool!=='hi')drawStroke(ictx,{tool:live.tool,color:live.color,size:live.size,pts:[a,p]});
+  });
+  function endStroke(){
+    if(!live)return;
+    if(live.tool==='hi')drawStroke(ictx,live);
+    strokes.push(live);live=null;
+  }
+  stage.addEventListener('pointerup',endStroke);
+  stage.addEventListener('pointercancel',endStroke);
+
+  /* problem text at the top of the board */
+  function layoutProblem(){
+    var t=$('problem').value.trim();probLines=[];barH=0;
+    if(!t)return;
+    ctx.save();ctx.font=PFONT;
+    var line='';
+    t.split(/\s+/).forEach(function(w){
+      var test=line?line+' '+w:w;
+      if(line&&ctx.measureText(test).width>W-48){probLines.push(line);line=w}else line=test;
+    });
+    if(line)probLines.push(line);
+    ctx.restore();
+    if(probLines.length>5){probLines=probLines.slice(0,5);probLines[4]+=' ...'}
+    barH=42+probLines.length*34+12;
+  }
+  var fromLink=new URLSearchParams(location.search).get('problem');
+  if(fromLink){$('problem').value=fromLink;$('problem').readOnly=true}
+  $('problem').addEventListener('input',layoutProblem);
+  layoutProblem();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layoutProblem);
+
+  /* the picture that gets recorded: problem, board, ink, camera bubble */
+  function frame(){
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    if(bgImg){
+      var k=Math.min(W/bgImg.width,(H-barH)/bgImg.height),w=bgImg.width*k,h=bgImg.height*k;
+      ctx.drawImage(bgImg,(W-w)/2,barH+(H-barH-h)/2,w,h);
+    }
+    if(barH){
+      ctx.save();ctx.textBaseline='top';
+      ctx.fillStyle='#7A1626';ctx.font='700 15px "DM Sans",Arial,sans-serif';ctx.fillText('PROBLEM',24,16);
+      ctx.fillStyle='#060B1A';ctx.font=PFONT;
+      for(var i=0;i<probLines.length;i++)ctx.fillText(probLines[i],24,42+i*34);
+      ctx.fillRect(0,barH,W,2);
+      ctx.restore();
+    }
+    ctx.drawImage(ink,0,0);
+    if(live&&live.tool==='hi')drawStroke(ctx,live);
+    if(camOn&&cam.readyState>=2&&cam.videoWidth){
+      var D=220,m=24,where=$('campos').value;
+      var cx=where.charAt(1)==='r'?W-m-D/2:m+D/2,cy=where.charAt(0)==='b'?H-m-D/2:barH+m+D/2;
+      var s=Math.min(cam.videoWidth,cam.videoHeight);
+      ctx.save();ctx.beginPath();ctx.arc(cx,cy,D/2,0,Math.PI*2);ctx.clip();
+      ctx.translate(cx,cy);ctx.scale(-1,1);
+      ctx.drawImage(cam,(cam.videoWidth-s)/2,(cam.videoHeight-s)/2,s,s,-D/2,-D/2,D,D);
+      ctx.restore();
+      ctx.beginPath();ctx.arc(cx,cy,D/2,0,Math.PI*2);ctx.lineWidth=5;ctx.strokeStyle='#060B1A';ctx.stroke();
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* toolbar */
+  document.querySelectorAll('[data-tool]').forEach(function(b){
+    b.addEventListener('click',function(){
+      tool=b.getAttribute('data-tool');
+      document.querySelectorAll('[data-tool]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+    });
+  });
+  document.querySelectorAll('[data-color]').forEach(function(b){
+    b.addEventListener('click',function(){
+      color=b.getAttribute('data-color');
+      document.querySelectorAll('[data-color]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+    });
+  });
+  $('size').addEventListener('input',function(){size=Number(this.value)});
+  $('undo').addEventListener('click',function(){strokes.pop();redraw();say('Last line removed.')});
+  $('clear').addEventListener('click',function(){strokes=[];redraw();say('Board cleared.')});
+  $('pic').addEventListener('change',function(){
+    var f=this.files&&this.files[0];if(!f)return;
+    var img=new Image();
+    img.onload=function(){bgImg=img;$('nopic').hidden=false;say('Picture added. You can draw on top of it.')};
+    img.onerror=function(){say('That picture could not be opened. Try a JPG or PNG.')};
+    img.src=URL.createObjectURL(f);this.value='';
+  });
+  $('nopic').addEventListener('click',function(){bgImg=null;this.hidden=true;say('Picture removed.')});
+
+  /* camera and microphone */
+  function getMedia(c){return navigator.mediaDevices.getUserMedia(c)}
+  $('enable').addEventListener('click',function(){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){say('This browser cannot use a camera or microphone here. Try Chrome, Edge or Safari.');return}
+    getMedia({video:{width:{ideal:640},height:{ideal:480}},audio:true})
+      .catch(function(){return getMedia({audio:true})})
+      .then(function(s){
+        media=s;
+        var hasCam=s.getVideoTracks().length>0,hasMic=s.getAudioTracks().length>0;
+        if(hasCam){cam.srcObject=s;cam.play().catch(function(){});camOn=true;$('camtoggle').disabled=false}
+        if(hasMic){
+          $('mictext').textContent='Mic on';
+          try{
+            var AC=window.AudioContext||window.webkitAudioContext,ac=new AC();
+            analyser=ac.createAnalyser();analyser.fftSize=512;
+            ac.createMediaStreamSource(s).connect(analyser);
+            levelData=new Uint8Array(analyser.fftSize);
+          }catch(e){}
+        }
+        $('enable').disabled=true;
+        say(hasCam?'Camera and microphone are on. Talk and watch the gold bar move.':'Microphone is on. No camera was found, so the video will show the whiteboard only.');
+      })
+      .catch(function(){say('Camera and microphone are blocked. Allow them in your browser, then press the button again.')});
+  });
+  $('camtoggle').addEventListener('click',function(){
+    camOn=!camOn;this.setAttribute('aria-pressed',String(camOn));
+    say(camOn?'Camera is showing.':'Camera is hidden. Your voice is still recorded.');
+  });
+  setInterval(function(){
+    if(!analyser)return;
+    analyser.getByteTimeDomainData(levelData);
+    var sum=0;for(var i=0;i<levelData.length;i++){var v=(levelData[i]-128)/128;sum+=v*v}
+    $('level').style.width=Math.min(100,Math.sqrt(sum/levelData.length)*400)+'%';
+  },100);
+
+  /* recording */
+  function pickType(){
+    var t=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+    for(var i=0;i<t.length;i++)if(MediaRecorder.isTypeSupported(t[i]))return t[i];
+    return '';
+  }
+  function fmt(s){s=Math.floor(s);return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+  function setState(s){
+    state=s;
+    $('record').disabled=s!=='idle';
+    $('pause').disabled=s==='idle';
+    $('stop').disabled=s==='idle';
+    $('limit').disabled=s!=='idle';
+    $('pause').textContent=s==='paused'?'Resume':'Pause';
+    $('pill').className='pill'+(s==='rec'?' rec':'');
+    $('pilltext').textContent=s==='rec'?'Recording':s==='paused'?'Paused':'Not recording';
+  }
+  $('record').addEventListener('click',function(){
+    if(!window.MediaRecorder||!stage.captureStream){say('This browser cannot record here. Try Chrome, Edge or Safari on a computer.');return}
+    var out=stage.captureStream(30);
+    var hasMic=false;
+    if(media)media.getAudioTracks().forEach(function(t){out.addTrack(t);hasMic=true});
+    var type=pickType(),opts={videoBitsPerSecond:1000000,audioBitsPerSecond:128000};
+    if(type)opts.mimeType=type;
+    try{rec=new MediaRecorder(out,opts)}catch(e){say('Recording could not start in this browser.');return}
+    chunks=[];
+    rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
+    rec.onstop=finish;
+    rec.start(1000);
+    base=0;elapsed=0;startT=Date.now();
+    releaseResult();$('result').hidden=true;
+    setState('rec');
+    say(hasMic?'Recording started.':'Recording started with no sound. Stop and turn on the microphone if you want your voice in the video.');
+  });
+  $('pause').addEventListener('click',function(){
+    if(state==='rec'){rec.pause();base=elapsed;setState('paused');say('Recording paused.')}
+    else if(state==='paused'){rec.resume();startT=Date.now();setState('rec');say('Recording again.')}
+  });
+  function stopRec(){if(rec&&rec.state!=='inactive')rec.stop()}
+  $('stop').addEventListener('click',stopRec);
+  setInterval(function(){
+    if(state!=='rec')return;
+    elapsed=base+(Date.now()-startT)/1000;
+    $('timer').textContent=fmt(elapsed);
+    if(elapsed>=Number($('limit').value)){say('Time limit reached.');stopRec()}
+  },250);
+  function finish(){
+    var type=(rec.mimeType||'video/webm');
+    ext=type.indexOf('mp4')>-1?'mp4':'webm';
+    var blob=new Blob(chunks,{type:type.split(';')[0]});
+    lastBlob=blob;blobUrl=URL.createObjectURL(blob);
+    $('preview').src=blobUrl;$('dl').href=blobUrl;nameFile();
+    $('size-note').textContent='Length '+fmt(elapsed)+'. File size '+(blob.size/1048576).toFixed(1)+' MB.';
+    setState('idle');
+    $('result').hidden=false;
+    say('Recording stopped. Your video is ready below.');
+    $('resulthead').focus();
+  }
+  function nameFile(){
+    var t=$('title').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    $('dl').setAttribute('download',(t||'teaching-video')+'.'+ext);
+  }
+  $('title').addEventListener('input',nameFile);
+  function releaseResult(){if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=null;lastBlob=null;$('preview').removeAttribute('src')}}
+
+  /* one web page with the problem and the video inside it */
+  function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+  $('dlhtml').addEventListener('click',function(){
+    if(!lastBlob)return;
+    say('Building your page. This can take a moment.');
+    var r=new FileReader();
+    r.onerror=function(){say('The page could not be built. Download the video file instead.')};
+    r.onload=function(){
+      var title=$('title').value.trim()||'Teaching video',prob=$('problem').value.trim();
+      var html='<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>'+esc(title)+'</title>'
+        +'<style>body{margin:0;background:#FAFAF9;color:#060B1A;font-family:Arial,sans-serif;font-size:17px;line-height:1.5}main{max-width:1000px;margin:0 auto;padding:32px 20px}'
+        +'.e{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#7A1626;margin:0}h1{font-size:34px;line-height:1.1;margin:8px 0 16px}'
+        +'h2{font-size:18px;margin:20px 0 4px}p{margin:0 0 12px;white-space:pre-wrap}video{width:100%;background:#000;margin-top:16px}</style></head><body><main>'
+        +'<p class="e">Student teaching video</p><h1>'+esc(title)+'</h1>'
+        +(prob?'<h2>Problem</h2><p>'+esc(prob)+'</p>':'')
+        +'<p>Recorded '+esc(new Date().toLocaleDateString())+'. Length '+fmt(elapsed)+'.</p>'
+        +'<video controls playsinline src="'+r.result+'"></video></main></body></html>';
+      var a=document.createElement('a'),u=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+      a.href=u;a.download=$('dl').getAttribute('download').replace(/\.[a-z0-9]+$/,'')+'.html';
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u)},30000);
+      say('Page downloaded. Upload that file to the assignment.');
+    };
+    r.readAsDataURL(lastBlob);
+  });
+
+  /* instructor link builder */
+  $('makelink').addEventListener('click',function(){
+    var t=$('linkproblem').value.trim();
+    if(!t){say('Type a problem first.');return}
+    $('linkout').value=location.href.split('#')[0].split('?')[0]+'?problem='+encodeURIComponent(t);
+    $('copylink').disabled=false;say('Link made.');
+  });
+  $('copylink').addEventListener('click',function(){
+    var o=$('linkout');o.select();
+    if(navigator.clipboard)navigator.clipboard.writeText(o.value).then(function(){say('Link copied.')},function(){say('Press Ctrl or Command and C to copy.')});
+    else say('Press Ctrl or Command and C to copy.');
+  });
+  $('again').addEventListener('click',function(){
+    releaseResult();$('result').hidden=true;$('timer').textContent='0:00';
+    say('Ready to record again. Your board is still here.');
+    $('record').focus();
+  });
+  $('dl').addEventListener('click',function(){say('Download started. Upload that file to the assignment.')});
+  window.addEventListener('beforeunload',function(e){if(state!=='idle'||blobUrl){e.preventDefault();e.returnValue=''}});
+  setState('idle');
+})();
+</script>
+<script>
+(function(){
+  var id='teaching-studio';
+  function send(){parent.postMessage({id:id,type:'iframe-height',height:document.documentElement.scrollHeight},'*')}
+  if(window.parent!==window){
+    window.addEventListener('load',send);
+    window.addEventListener('resize',send);
+    if(window.ResizeObserver)new ResizeObserver(send).observe(document.body);
+  }
+})();
+</script>
+</body>
+</html>
