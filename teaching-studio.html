@@ -180,9 +180,33 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
   .num{font-size:48px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before{transition:none!important;animation:none!important;scroll-behavior:auto!important}#s0 h1 svg path{stroke-dashoffset:0}}
+
+/* light option: white background, dark navy text */
+body.light{background:var(--white);color:var(--navy)}
+.light .top{background:var(--white);color:var(--navy);border-bottom:1px solid var(--line)}
+.light .prog{background:#E6E8EC}
+.light .quiet{border-color:transparent;color:#4A5063;font-size:12px;padding:0 10px}
+.light .eyebrow{color:var(--terra)}
+.light select{background:var(--white)}
+.light button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.light :focus-visible{outline-color:var(--terra)}
+.light .card{border:1px solid var(--line);box-shadow:0 8px 24px rgba(6,11,26,.10)}
+.light #s0 h1 .hl{color:var(--terra)}
+.light #s3{background:var(--white);color:var(--navy)}
+.light .rail,.light .bar{background:var(--white);border-color:var(--line)}
+.light .rail hr{border-top-color:var(--line)}
+.light .rail .tool:hover{border-color:var(--navy)}
+.light .sw span{border-color:var(--navy)}
+.light .sw[aria-pressed="true"]{border-color:var(--navy)!important;background:transparent!important}
+.light .pill{border-color:rgba(6,11,26,.4)}
+.light #stage{background:var(--white);box-shadow:0 0 0 1px var(--line)}
+.light .rubric{color:var(--navy)}
+.light .rubric li label{border-top-color:var(--line)}
+.light .rubric input{accent-color:var(--terra)}
+.light #count{background:rgba(255,255,255,.82);color:var(--navy)}
 </style>
 </head>
-<body class="dark">
+<body class="light">
 <a class="skip" href="#app">Skip to the studio</a>
 <header class="top">
   <div class="in">
@@ -654,7 +678,7 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
   }
   function frame(){
     ctx.setTransform(1,0,0,1,0,0);
-    ctx.fillStyle='#060B1A';ctx.fillRect(W,0,SIDE,H);
+    ctx.fillStyle='#FFFFFF';ctx.fillRect(W,0,SIDE,H);ctx.fillStyle='#D5D8DE';ctx.fillRect(W,0,2,H);
     ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
     ctx.setTransform(view.z,0,0,view.z,-view.x*view.z,-view.y*view.z);
     renderBoard(ctx,ink,bgImg);
