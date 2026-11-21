@@ -57,8 +57,8 @@ Ratios were calculated from the hex values in the file. AA needs 4.5 for normal 
 | White text on terra cotta buttons | #FFFFFF on #8B3A2E | 7.7 | Pass | Pass |
 | White text on red Recording button | #FFFFFF on #B3261E | 6.5 | Pass | Fail |
 | Navy text on gold not-recording banner | #070A15 on #D9B45A | 10.0 | Pass | Pass |
-| Navy "Start" on the paint drop, mid tone (large text) | #070A15 on #D9B45A | 10.0 | Pass | Pass |
-| Navy "Start" on the paint drop, darkest edge (large text) | #070A15 on #AD8530 | 5.8 | Pass | Pass |
+| Terra cotta "Start" on the paint drop, where the word sits (21 px bold, counts as large text) | #8B3A2E on #D9B45A to #EBCF85 | 3.9 to 5.0 | Pass | Fail |
+| Terra cotta "Start" against the drop's darkest edge (the word does not reach it) | #8B3A2E on #AD8530 | 2.3 | Fail | Fail |
 | Navy text on instruction preview | #070A15 on #F2F3F6 | 17.8 | Pass | Pass |
 | Terra cotta link on instruction preview | #8B3A2E on #F2F3F6 | 6.9 | Pass | Fail |
 
