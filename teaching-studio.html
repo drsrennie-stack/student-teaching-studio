@@ -13,7 +13,9 @@
 body{margin:0;background:var(--navy);color:var(--white);font-family:"DM Sans",Arial,sans-serif;font-size:17px;line-height:1.5}
 .skip{position:absolute;left:-999px;top:0;background:var(--white);color:var(--navy);padding:12px 16px;z-index:10}
 .skip:focus{left:8px;top:8px}
-:focus-visible{outline:3px solid var(--navy);box-shadow:0 0 0 6px var(--gold);border-radius:4px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.card :focus-visible{outline-color:var(--terra)}
+.card textarea:focus-visible,.card input:focus-visible{border-color:var(--terra)}
 h1,h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:500;margin:0;line-height:1.1}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0}
 [hidden]{display:none!important}
@@ -48,7 +50,7 @@ input[type=text],input[type=password]{min-height:44px}
 textarea[readonly]{background:#E9ECF1}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
 .file{position:absolute;width:1px;height:1px;opacity:0}
-.file:focus-visible + .btn{outline:3px solid var(--white);box-shadow:0 0 0 6px var(--gold)}
+.file:focus-visible + .btn{outline:3px solid var(--gold);outline-offset:2px}
 svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
 /* motion: each screen slides in from the direction of travel */
@@ -114,9 +116,14 @@ summary{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:upperc
 details > div{padding-bottom:16px}
 
 /* studio */
-#s3{background:var(--navy);color:var(--white);padding:16px 16px 28px}
+#s3{background:var(--navy);color:var(--white);padding:6px 16px 20px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.studio .top .in{padding:4px 20px}
+.studio .brand{font-size:18px}
+.studio .brand svg{height:36px;width:32px}
+.studio #msg{min-height:26px;padding:3px 20px;font-size:14px}
 .fit{margin:0 auto;max-width:1400px}
-html.standalone .fit{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 110px))}
+html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px))}
 .work{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px}
 .rail{background:var(--navy);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;align-items:center}
 .rail .tool{flex-direction:column;width:76px;min-height:60px;border-radius:12px;font-size:10px;letter-spacing:.08em;padding:8px 2px;gap:4px;border-color:transparent}
@@ -128,15 +135,13 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 110px))
 .sw[aria-pressed="true"]{border-color:var(--gold)!important}
 .rail label{font-size:10px}
 .rail input[type=range]{width:76px;min-height:30px}
-.work.hasrub{grid-template-columns:96px minmax(0,1fr) 270px}
-html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 400px))}
-.rubric{background:var(--navy);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:14px 16px;align-self:start}
+.rubric{position:absolute;top:35%;right:0;bottom:0;width:18.99%;overflow:auto;padding:4px 12px 10px;color:var(--white)}
 .rubric ul{list-style:none;margin:8px 0 0;padding:0}
-.rubric li label{display:flex;gap:12px;align-items:flex-start;padding:10px 0;font-size:16px;font-weight:400;letter-spacing:0;text-transform:none;line-height:1.35;cursor:pointer;border-top:1px solid rgba(255,255,255,.18)}
-.rubric input{width:24px;height:24px;flex:none;margin:0;accent-color:var(--gold)}
+.rubric li label{display:flex;gap:12px;align-items:flex-start;padding:8px 0;font-size:14px;font-weight:400;letter-spacing:0;text-transform:none;line-height:1.35;cursor:pointer;border-top:1px solid rgba(255,255,255,.18)}
+.rubric input{width:20px;height:20px;flex:none;margin:0;accent-color:var(--gold)}
 #rubcount{margin:4px 0 0;font-size:14px}
-#stage{display:block;width:100%;height:auto;aspect-ratio:16/9;background:var(--white);border-radius:10px;touch-action:none;cursor:crosshair}
-.bar{background:var(--navy);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:10px 14px;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between}
+#stage{display:block;width:100%;height:auto;aspect-ratio:1580/720;background:var(--navy);border-radius:10px;touch-action:none;cursor:crosshair}
+.bar{background:var(--navy);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:8px 14px;margin:0 0 10px;display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between}
 .bar > div{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .bar label{font-size:11px}
 #record{min-height:52px;padding:0 28px;font-size:14px}
@@ -147,11 +152,11 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
 #timer{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:500;font-size:24px;min-width:64px}
 
 @keyframes nudge{0%,100%{transform:none}50%{transform:scale(1.025)}}
-.warn{background:var(--gold);color:var(--navy);font-weight:700;border-radius:10px;padding:10px 16px;margin:0 0 12px;text-align:center}
+.warn{background:var(--gold);color:var(--navy);font-weight:700;border-radius:10px;padding:7px 16px;margin:0 0 10px;text-align:center}
 .warn.nudge{animation:nudge .5s ease 2}
-.pager{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-top:12px}
+.pager{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:0 0 10px}
+.pager .gap{margin-left:16px}
 #zoomtext{font-size:13px;font-weight:700;letter-spacing:.1em;min-width:56px;text-align:center}
-.pager #zoomout{margin-left:18px}
 #pgtext{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;min-width:110px;text-align:center}
 
 /* result */
@@ -166,7 +171,7 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
 .result ul{padding-left:20px;margin:14px 0}
 #cam{position:fixed;width:2px;height:2px;opacity:0;pointer-events:none;left:0;bottom:0}
 @media (max-width:820px){
-  .work,.work.hasrub{grid-template-columns:1fr}
+  .work{grid-template-columns:1fr}
   .rail{flex-direction:row;flex-wrap:wrap;justify-content:center}
   .rail hr{display:none}
   .swatches{grid-template-columns:repeat(5,34px)}
@@ -182,7 +187,7 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
 <header class="top">
   <div class="in">
     <div class="brand"><svg viewBox="122 144 208 236" aria-hidden="true"><g transform="translate(158,120) scale(1.7)"><g transform="translate(0,18)"><g transform="translate(0,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g><g transform="translate(40,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(80,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#F5F1E8"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#F5F1E8"/></g></g></g></svg><span>Teachback</span></div>
-    <button type="button" id="instr" class="quiet">Instructor</button>
+    <button type="button" id="instr" class="quiet">Instructor setup</button>
   </div>
   <div class="prog" aria-hidden="true"><span id="prog"></span></div>
   <p id="msg" role="status" aria-live="polite"></p>
@@ -256,7 +261,7 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
   <!-- step 3 -->
   <section id="s3" aria-labelledby="h3" hidden>
     <div class="fit">
-      <h1 id="h3" tabindex="-1" style="font-size:20px;margin:0 0 12px">Your whiteboard</h1>
+      <h1 id="h3" tabindex="-1" class="sr">Your whiteboard</h1>
       <div class="bar" role="group" aria-label="Recording controls">
         <div>
           <button type="button" id="record" class="primary">Record</button>
@@ -270,13 +275,6 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
         </div>
         <div>
           <button type="button" id="back3">Change problem</button>
-          <label for="campos">Camera spot</label>
-          <select id="campos">
-            <option value="br">Bottom right</option>
-            <option value="bl">Bottom left</option>
-            <option value="tr">Top right</option>
-            <option value="tl">Top left</option>
-          </select>
           <label for="limit">Time limit</label>
           <select id="limit">
             <option value="120">2 min</option>
@@ -287,6 +285,20 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
         </div>
       </div>
       <p id="warn" class="warn">You are not recording yet. Press Record before you start teaching.</p>
+      <div class="pager" role="group" aria-label="Whiteboard pages">
+        <button type="button" id="prevpg">Previous</button>
+        <span id="pgtext" aria-live="polite">Page 1 of 1</span>
+        <button type="button" id="nextpg">Next</button>
+        <button type="button" id="addpg">Add page</button>
+        <button type="button" id="zoomout" class="gap" disabled>Zoom out</button>
+        <span id="zoomtext" aria-live="polite">100%</span>
+        <button type="button" id="zoomin">Zoom in</button>
+        <button type="button" id="undo" class="gap">Undo</button>
+        <button type="button" id="clear">Clear page</button>
+        <input class="file" type="file" id="pic" accept="image/*">
+        <label class="btn" for="pic">Add picture</label>
+        <button type="button" id="nopic" hidden>Remove picture</button>
+      </div>
       <div class="work">
         <div class="rail" role="toolbar" aria-label="Drawing tools" aria-orientation="vertical">
           <button type="button" class="tool" data-tool="pen" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1L19 8l-3-3L5 16l-1 4z"/></svg>Pen</button>
@@ -303,31 +315,16 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
           </div>
           <label for="size">Size</label>
           <input type="range" id="size" min="2" max="14" value="4">
-          <hr>
-          <button type="button" class="tool" id="undo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6L4 11l5 5M4 11h10a5 5 0 010 10h-3"/></svg>Undo</button>
-          <button type="button" class="tool" id="clear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Clear</button>
-          <input class="file" type="file" id="pic" accept="image/*">
-          <label class="btn tool" for="pic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4"/></svg>Picture</label>
-          <button type="button" class="tool" id="nopic" hidden>Remove picture</button>
         </div>
         <div class="board">
-          <canvas id="stage" width="1280" height="720" role="img" tabindex="0" aria-label="Whiteboard. Draw with a mouse, finger or stylus. When zoomed in, the arrow keys move the view."></canvas>
+          <canvas id="stage" width="1580" height="720" role="img" tabindex="0" aria-label="Whiteboard. Draw with a mouse, finger or stylus. When zoomed in, the arrow keys move the view."></canvas>
           <div id="count" aria-hidden="true" hidden></div>
-        </div>
-        <aside id="rubric" class="rubric" aria-labelledby="rubhead" hidden>
+          <aside id="rubric" class="rubric" aria-labelledby="rubhead" hidden>
           <p class="eyebrow" id="rubhead">Rubric</p>
           <p id="rubcount" aria-live="polite"></p>
           <ul id="rublist"></ul>
-        </aside>
-      </div>
-      <div class="pager" role="group" aria-label="Whiteboard pages">
-        <button type="button" id="prevpg">Previous page</button>
-        <span id="pgtext" aria-live="polite">Page 1 of 1</span>
-        <button type="button" id="nextpg">Next page</button>
-        <button type="button" id="addpg">Add a page</button>
-        <button type="button" id="zoomout" disabled>Zoom out</button>
-        <span id="zoomtext" aria-live="polite">100%</span>
-        <button type="button" id="zoomin">Zoom in</button>
+          </aside>
+        </div>
       </div>
     </div>
   </section>
@@ -506,6 +503,7 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
   function go(n){
     var dir=n>=cur?'fwd':'back';cur=n;
     $('prog').style.width=(n*25)+'%';
+    document.body.classList.toggle('studio',n===3);
     for(var i=0;i<=5;i++)$('s'+i).hidden=true;
     window.scrollTo(0,0);
     function reveal(){
@@ -543,9 +541,16 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
     c.stroke();c.restore();
   }
   function redraw(){ictx.clearRect(0,0,W,H);strokes.forEach(function(s){drawStroke(ictx,s)})}
-  function pos(e){var r=stage.getBoundingClientRect();return{x:view.x+(e.clientX-r.left)*W/r.width/view.z,y:view.y+(e.clientY-r.top)*H/r.height/view.z}}
+  /* the recorded picture is the board plus a side strip for the camera, so the camera never covers the writing */
+  var SIDE=300,SW=W+SIDE,penSeen=false;
+  function pos(e){var r=stage.getBoundingClientRect();return{x:view.x+(e.clientX-r.left)*SW/r.width/view.z,y:view.y+(e.clientY-r.top)*H/r.height/view.z}}
   stage.addEventListener('pointerdown',function(e){
     if(e.button)return;
+    var br=stage.getBoundingClientRect();if((e.clientX-br.left)*SW/br.width>W)return;
+    /* once a stylus is used, ignore finger and palm touches so a resting hand does not draw */
+    if(e.pointerType==='pen')penSeen=true;
+    if(penSeen&&e.pointerType==='touch')return;
+    if(live||pan)return;
     if(state==='idle'){
       var wn=$('warn');wn.classList.remove('nudge');void wn.offsetWidth;wn.classList.add('nudge');
       if(!warned){warned=true;say('You are not recording yet. Press Record before you start teaching.')}
@@ -559,7 +564,7 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
   stage.addEventListener('pointermove',function(e){
     if(pan){
       var r=stage.getBoundingClientRect();
-      view.x=pan.vx-(e.clientX-pan.sx)*W/r.width/view.z;
+      view.x=pan.vx-(e.clientX-pan.sx)*SW/r.width/view.z;
       view.y=pan.vy-(e.clientY-pan.sy)*H/r.height/view.z;
       clampView();return;
     }
@@ -616,8 +621,6 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
       lab.appendChild(cb);lab.appendChild(sp);li.appendChild(lab);$('rublist').appendChild(li);
     });
     $('rubric').hidden=false;
-    document.querySelector('.work').classList.add('hasrub');
-    document.querySelector('#s3 .fit').classList.add('hasrub');
     rubCount();
   }
   function wrapText(c,t,maxW){
@@ -650,19 +653,22 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
     c.drawImage(inkCanvas,0,0);
   }
   function frame(){
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle='#060B1A';ctx.fillRect(W,0,SIDE,H);
+    ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
     ctx.setTransform(view.z,0,0,view.z,-view.x*view.z,-view.y*view.z);
     renderBoard(ctx,ink,bgImg);
     if(live&&live.tool==='hi')drawStroke(ctx,live);
+    ctx.restore();
     ctx.setTransform(1,0,0,1,0,0);
     if(camOn&&cam.readyState>=2&&cam.videoWidth){
-      var D=220,m=24,where=$('campos').value;
-      var cx=where.charAt(1)==='r'?W-m-D/2:m+D/2,cy=where.charAt(0)==='b'?H-m-D/2:barH+m+D/2;
+      var D=220,cx=W+SIDE/2,cy=20+D/2;
       var s=Math.min(cam.videoWidth,cam.videoHeight);
       ctx.save();ctx.beginPath();ctx.arc(cx,cy,D/2,0,Math.PI*2);ctx.clip();
       ctx.translate(cx,cy);ctx.scale(-1,1);
       ctx.drawImage(cam,(cam.videoWidth-s)/2,(cam.videoHeight-s)/2,s,s,-D/2,-D/2,D,D);
       ctx.restore();
-      ctx.beginPath();ctx.arc(cx,cy,D/2,0,Math.PI*2);ctx.lineWidth=5;ctx.strokeStyle='#060B1A';ctx.stroke();
+      ctx.beginPath();ctx.arc(cx,cy,D/2,0,Math.PI*2);ctx.lineWidth=4;ctx.strokeStyle='#D9B45A';ctx.stroke();
     }
     requestAnimationFrame(frame);
   }
@@ -738,7 +744,7 @@ html.standalone .fit.hasrub{max-width:max(680px,calc((100vh - 390px) * 16 / 9 + 
 
   /* recording */
   function pickType(){
-    var t=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+    var t=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4'];
     for(var i=0;i<t.length;i++)if(MediaRecorder.isTypeSupported(t[i]))return t[i];
     return '';
   }
