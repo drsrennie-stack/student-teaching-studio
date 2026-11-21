@@ -140,6 +140,8 @@ details > div{padding-bottom:16px}
 html.standalone .fit{max-width:max(680px,calc((100vh - 265px) * 79 / 36 + 142px))}
 .work{display:grid;grid-template-columns:128px minmax(0,1fr);gap:14px}
 .tools{display:grid;grid-template-columns:50px 50px;gap:6px}
+#textin::placeholder{color:#5B6170;opacity:1}
+#texthint{position:absolute;z-index:3;background:#070A15;color:#fff;font-size:14px;font-weight:500;line-height:1.2;padding:6px 10px;border-radius:6px;white-space:nowrap;pointer-events:none}
 #textin{position:absolute;z-index:3;min-height:0;margin:0;padding:0 4px;border:2px dashed var(--terra);border-radius:4px;background:rgba(255,255,255,.92);color:#111;font-family:"DM Sans",Arial,sans-serif;font-weight:500;line-height:1.2;width:auto}
 .rail{background:var(--navy);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;align-items:center}
 .rail .tool{flex-direction:column;width:50px;min-height:54px;border-radius:10px;font-size:11px;letter-spacing:0;padding:6px 0;gap:3px;border-color:transparent}
@@ -391,7 +393,7 @@ body.light{background:var(--white);color:var(--navy)}
           <button type="button" class="tool" data-tool="pen" aria-pressed="true" title="Pen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1L19 8l-3-3L5 16l-1 4z"/></svg>Pen</button>
           <button type="button" class="tool" data-tool="hi" aria-pressed="false" title="Marker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l8-8 4 4-8 8H6v-4zM4 22h9"/></svg>Marker</button>
           <button type="button" class="tool" data-tool="eraser" aria-pressed="false" title="Eraser"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 19l-4-4L14 5l6 6-8 8H8zM12 19h8"/></svg>Eraser</button>
-          <button type="button" class="tool" data-tool="move" aria-pressed="false" title="Move"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/></svg>Move</button>
+          <button type="button" class="tool" data-tool="move" aria-pressed="false" title="Move or resize an item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/></svg>Move</button>
           <button type="button" class="tool" data-tool="text" aria-pressed="false" title="Text"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M12 6v13M9 19h6"/></svg>Text</button>
           <button type="button" class="tool" data-tool="line" aria-pressed="false" title="Line"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5"/></svg>Line</button>
           <button type="button" class="tool" data-tool="arrow" aria-pressed="false" title="Arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5M10 5h9v9"/></svg>Arrow</button>
@@ -411,7 +413,8 @@ body.light{background:var(--white);color:var(--navy)}
         </div>
         <div class="board">
           <canvas id="stage" width="1580" height="720" role="img" tabindex="0" aria-label="Whiteboard. Draw with a mouse, finger or stylus. With the Text tool chosen, press Enter here to type on the board. When zoomed in, the arrow keys move the view."></canvas>
-          <input type="text" id="textin" aria-label="Type text for the whiteboard, then press Enter" autocomplete="off" hidden>
+          <input type="text" id="textin" aria-label="Type text for the whiteboard, then press Return or Enter to place it" aria-describedby="texthint" placeholder="Type here" autocomplete="off" hidden>
+          <div id="texthint" hidden>Press Return (Enter) to place your text</div>
           <div id="count" aria-hidden="true" hidden></div>
           <aside id="rubric" class="rubric" aria-labelledby="rubhead" hidden>
           <p class="eyebrow" id="rubhead">Rubric</p>
@@ -693,6 +696,85 @@ body.light{background:var(--white);color:var(--navy)}
     c.stroke();c.restore();
   }
   function redraw(){ictx.clearRect(0,0,W,H);strokes.forEach(function(s){drawStroke(ictx,s)})}
+
+  /* Move tool: pick up an item to move it, or drag its gold dot to resize it */
+  var sel=null,grab=null;
+  function groupOf(s){return s.g?strokes.filter(function(x){return x.g===s.g}):[s]}
+  function boxOf(s){
+    if(s.tool==='text'){
+      ictx.save();ictx.font='500 '+s.fs+'px "DM Sans",Arial,sans-serif';var w=ictx.measureText(s.text).width;ictx.restore();
+      return{x:s.x,y:s.y,X:s.x+w,Y:s.y+s.fs*1.2};
+    }
+    var pts=s.a?[s.a,s.b]:s.pts,x=1e9,y=1e9,X=-1e9,Y=-1e9;
+    pts.forEach(function(q){x=Math.min(x,q.x);y=Math.min(y,q.y);X=Math.max(X,q.x);Y=Math.max(Y,q.y)});
+    return{x:x,y:y,X:X,Y:Y};
+  }
+  function boxOfAll(list){
+    var b={x:1e9,y:1e9,X:-1e9,Y:-1e9};
+    list.forEach(function(s){var c=boxOf(s);b.x=Math.min(b.x,c.x);b.y=Math.min(b.y,c.y);b.X=Math.max(b.X,c.X);b.Y=Math.max(b.Y,c.Y)});
+    return b;
+  }
+  function segDist(q,a,b){
+    var dx=b.x-a.x,dy=b.y-a.y,l=dx*dx+dy*dy,t=l?Math.max(0,Math.min(1,((q.x-a.x)*dx+(q.y-a.y)*dy)/l)):0;
+    return Math.hypot(q.x-a.x-t*dx,q.y-a.y-t*dy);
+  }
+  function hitEdge(s,q,tol){
+    var b=boxOf(s);
+    if(q.x<b.x-tol||q.x>b.X+tol||q.y<b.y-tol||q.y>b.Y+tol)return false;
+    if(s.tool==='text')return true;
+    if(s.tool==='line'||s.tool==='arrow')return segDist(q,s.a,s.b)<=tol+s.size/2;
+    if(s.tool==='rect')return Math.min(Math.abs(q.x-b.x),Math.abs(q.x-b.X),Math.abs(q.y-b.y),Math.abs(q.y-b.Y))<=tol+s.size/2;
+    if(s.tool==='oval'){
+      var rx=Math.max(1,(b.X-b.x)/2),ry=Math.max(1,(b.Y-b.y)/2),d=Math.hypot((q.x-(b.x+b.X)/2)/rx,(q.y-(b.y+b.Y)/2)/ry);
+      return Math.abs(d-1)*Math.min(rx,ry)<=tol+s.size/2;
+    }
+    var w=(s.tool==='hi'?s.size*5:s.size)/2+tol;
+    if(s.pts.length===1)return Math.hypot(q.x-s.pts[0].x,q.y-s.pts[0].y)<=w;
+    for(var i=1;i<s.pts.length;i++)if(segDist(q,s.pts[i-1],s.pts[i])<=w)return true;
+    return false;
+  }
+  function pick(q,tol){
+    var i,s,b;
+    for(i=strokes.length-1;i>=0;i--){s=strokes[i];if(s.tool!=='eraser'&&hitEdge(s,q,tol))return s}
+    /* a click inside an empty box or oval picks it up too */
+    for(i=strokes.length-1;i>=0;i--){
+      s=strokes[i];if(s.tool!=='rect'&&s.tool!=='oval')continue;
+      b=boxOf(s);if(q.x>=b.x&&q.x<=b.X&&q.y>=b.y&&q.y<=b.Y)return s;
+    }
+    return null;
+  }
+  function handlesOf(s){
+    if(s.tool==='line'||s.tool==='arrow')return[{x:s.a.x,y:s.a.y,k:'a'},{x:s.b.x,y:s.b.y,k:'b'}];
+    var b=boxOfAll(groupOf(s));return[{x:b.X,y:b.Y,k:'size'}];
+  }
+  function shift(list,dx,dy){
+    list.forEach(function(s){
+      if(s.tool==='text'){s.x+=dx;s.y+=dy}
+      else if(s.a){s.a={x:s.a.x+dx,y:s.a.y+dy};s.b={x:s.b.x+dx,y:s.b.y+dy}}
+      else s.pts=s.pts.map(function(q){return{x:q.x+dx,y:q.y+dy}});
+    });
+  }
+  function snap(list){return JSON.parse(JSON.stringify(list))}
+  function put(list,from){list.forEach(function(s,i){var f=from[i];for(var k in f)s[k]=JSON.parse(JSON.stringify(f[k]))})}
+  function scaleSel(list,from,box,kx,ky){
+    put(list,from);
+    list.forEach(function(s){
+      if(s.tool==='text'){var k=Math.max(10/s.fs,Math.min(240/s.fs,ky));s.fs=s.fs*k;s.x=box.x+(s.x-box.x)*k;s.y=box.y+(s.y-box.y)*k}
+      else if(s.a){s.a={x:box.x+(s.a.x-box.x)*kx,y:box.y+(s.a.y-box.y)*ky};s.b={x:box.x+(s.b.x-box.x)*kx,y:box.y+(s.b.y-box.y)*ky}}
+      else s.pts=s.pts.map(function(q){return{x:box.x+(q.x-box.x)*ky,y:box.y+(q.y-box.y)*ky}});
+    });
+  }
+  function dropSel(){sel=null;grab=null}
+  function drawSel(c){
+    if(!sel||strokes.indexOf(sel)<0){sel=null;return}
+    var b=boxOfAll(groupOf(sel)),m=6/view.z;
+    c.save();c.lineWidth=2/view.z;c.strokeStyle='#8B3A2E';c.setLineDash([8/view.z,6/view.z]);
+    c.strokeRect(b.x-m,b.y-m,b.X-b.x+2*m,b.Y-b.y+2*m);c.setLineDash([]);
+    handlesOf(sel).forEach(function(h){
+      c.beginPath();c.arc(h.x,h.y,9/view.z,0,Math.PI*2);c.fillStyle='#D9B45A';c.fill();c.lineWidth=2.5/view.z;c.strokeStyle='#070A15';c.stroke();
+    });
+    c.restore();
+  }
   /* the recorded picture is the board plus a side strip for the camera, so the camera never covers the writing */
   var SIDE=300,SW=W+SIDE,penSeen=false,SHAPES=['line','arrow','rect','oval'];
   function pos(e){var r=stage.getBoundingClientRect();return{x:view.x+(e.clientX-r.left)*SW/r.width/view.z,y:view.y+(e.clientY-r.top)*H/r.height/view.z}}
@@ -708,7 +790,17 @@ body.light{background:var(--white);color:var(--navy)}
       if(!warned){warned=true;say('You are not recording yet. Press Record before you start teaching.')}
     }
     stage.setPointerCapture(e.pointerId);
-    if(tool==='move'){pan={sx:e.clientX,sy:e.clientY,vx:view.x,vy:view.y};e.preventDefault();return}
+    if(tool==='move'){
+      var mq=pos(e),tol=16*SW/br.width/view.z,hh=null;
+      if(sel)handlesOf(sel).forEach(function(h){if(Math.hypot(mq.x-h.x,mq.y-h.y)<=tol)hh=h});
+      if(hh){var gl=groupOf(sel);grab={mode:hh.k,list:gl,from:snap(gl),box:boxOfAll(gl),q:mq}}
+      else{
+        var hit=pick(mq,tol*.6);
+        if(hit){sel=hit;var ml=groupOf(hit);grab={mode:'move',list:ml,from:snap(ml),q:mq}}
+        else{dropSel();pan={sx:e.clientX,sy:e.clientY,vx:view.x,vy:view.y}}
+      }
+      e.preventDefault();return;
+    }
     if(tool==='text'){openText(pos(e));e.preventDefault();return}
     if(SHAPES.indexOf(tool)>-1){var q=pos(e);live={tool:tool,color:color,size:size,a:q,b:q};e.preventDefault();return}
     live={tool:tool,color:color,size:size,pts:[pos(e)]};
@@ -722,6 +814,16 @@ body.light{background:var(--white);color:var(--navy)}
       view.y=pan.vy-(e.clientY-pan.sy)*H/r.height/view.z;
       clampView();return;
     }
+    if(grab){
+      var gq=pos(e);
+      if(grab.mode==='move'){put(grab.list,grab.from);shift(grab.list,gq.x-grab.q.x,gq.y-grab.q.y)}
+      else if(grab.mode==='a'||grab.mode==='b'){sel[grab.mode]={x:gq.x,y:gq.y}}
+      else{
+        var gb=grab.box,gw=Math.max(1,gb.X-gb.x),gh=Math.max(1,gb.Y-gb.y);
+        scaleSel(grab.list,grab.from,gb,Math.max(.05,(gq.x-gb.x)/gw),Math.max(.05,(gq.y-gb.y)/gh));
+      }
+      redraw();return;
+    }
     if(!live)return;
     if(live.a){live.b=pos(e);return}
     var p=pos(e),a=live.pts[live.pts.length-1];
@@ -730,6 +832,7 @@ body.light{background:var(--white);color:var(--navy)}
   });
   function endStroke(){
     pan=null;
+    if(grab){grab=null;saveBoard();return}
     if(!live)return;
     if(live.a&&Math.abs(live.b.x-live.a.x)+Math.abs(live.b.y-live.a.y)<4){live=null;return}
     if(live.tool==='hi'||live.a)drawStroke(ictx,live);
@@ -745,16 +848,19 @@ body.light{background:var(--white);color:var(--navy)}
     box.style.left=((q.x-view.x)*k)+'px';box.style.top=((q.y-view.y)*k)+'px';
     box.style.fontSize=(fs*k)+'px';box.style.color=color;
     box.style.width=Math.max(140,r.width*W/SW-(q.x-view.x)*k-8)+'px';
+    var th=$('texthint');th.hidden=false;th.style.left=box.style.left;th.style.top=((q.y-view.y)*k+fs*k*1.2+14)+'px';
     setTimeout(function(){box.focus()},0);
   }
   function closeText(keep){
     var box=$('textin');if(box.hidden)return;
-    var t=box.value.trim();box.hidden=true;
+    var t=box.value.trim();box.hidden=true;$('texthint').hidden=true;
     if(keep&&t&&textAt){
       ictx.save();ictx.font='500 '+textAt.fs+'px "DM Sans",Arial,sans-serif';
       var rows=wrapText(ictx,t,Math.max(120,W-textAt.x-24));ictx.restore();
+      var grp=rows.length>1?'t'+Date.now():0;
       rows.forEach(function(line,i){
         var st={tool:'text',color:color,fs:textAt.fs,x:textAt.x,y:textAt.y+i*textAt.fs*1.250,text:line};
+        if(grp)st.g=grp;
         drawStroke(ictx,st);strokes.push(st);
       });
       saveBoard();
@@ -774,6 +880,21 @@ body.light{background:var(--white);color:var(--navy)}
     if(e.inputType==='insertFromPaste'||e.inputType==='insertFromDrop'||e.inputType==='insertFromYank'){e.preventDefault();say('Pasting is turned off here. Type your text.')}
   });
   stage.addEventListener('keydown',function(e){
+    if(tool==='move'){
+      var items=strokes.filter(function(x){return x.tool!=='eraser'}),k=e.key,step=e.shiftKey?2:12;
+      if(k==='Enter'||k===' '){
+        e.preventDefault();if(!items.length){say('There is nothing on this page to move yet.');return}
+        var at=sel?items.indexOf(sel):-1;do{at=(at+1)%items.length}while(sel&&items.length>1&&groupOf(sel).indexOf(items[at])>-1);
+        sel=items[at];say('Item '+(at+1)+' of '+items.length+' picked. Arrow keys move it. Plus and minus resize it. Delete removes it.');return;
+      }
+      if(!sel)return;
+      var gl2=groupOf(sel),d={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,-step],ArrowDown:[0,step]}[k];
+      if(d){e.preventDefault();shift(gl2,d[0],d[1]);redraw();saveBoard();return}
+      if(k==='+'||k==='='||k==='-'){e.preventDefault();var f=k==='-'?1/1.1:1.1;scaleSel(gl2,snap(gl2),boxOfAll(gl2),f,f);redraw();saveBoard();return}
+      if(k==='Delete'||k==='Backspace'){e.preventDefault();strokes=strokes.filter(function(x){return gl2.indexOf(x)<0});pages[pi].strokes=strokes;dropSel();redraw();saveBoard();say('Item removed.');return}
+      if(k==='Escape'){dropSel();return}
+      return;
+    }
     if(tool!=='text'||(e.key!=='Enter'&&e.key!==' '))return;
     e.preventDefault();
     var fs=size*5+16,y=barH+30+textRow*(fs+14);
@@ -897,6 +1018,7 @@ body.light{background:var(--white);color:var(--navy)}
     ctx.setTransform(view.z,0,0,view.z,-view.x*view.z,-view.y*view.z);
     renderBoard(ctx,ink,bgImg);
     if(live&&(live.tool==='hi'||live.a))drawStroke(ctx,live);
+    if(tool==='move')drawSel(ctx);
     ctx.restore();
     ctx.setTransform(1,0,0,1,0,0);
     if(demoMode){ctx.save();ctx.fillStyle=lightView?'#070A15':'#FFFFFF';ctx.globalAlpha=.7;ctx.font='500 20px "DM Sans",Arial,sans-serif';ctx.textAlign='center';ctx.fillText('chalkcast demo',W+SIDE/2,H-28);ctx.restore()}
@@ -916,9 +1038,10 @@ body.light{background:var(--white);color:var(--navy)}
   /* tools */
   document.querySelectorAll('[data-tool]').forEach(function(b){
     b.addEventListener('click',function(){
-      tool=b.getAttribute('data-tool');
-      stage.style.cursor=tool==='move'?'grab':tool==='text'?'text':'crosshair';
-      if(tool==='text')say('Click the board where you want the text, or press Enter on the board. Type, then press Enter.');
+      tool=b.getAttribute('data-tool');dropSel();
+      stage.style.cursor=tool==='move'?'move':tool==='text'?'text':'crosshair';
+      if(tool==='move')say('Drag an item to move it. Drag its gold dot to resize it. When you are zoomed in, drag an empty spot to move around the board.');
+      if(tool==='text')say('Click the board where you want the text. Type, then press Return (Enter) to place it.');
       document.querySelectorAll('[data-tool]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
     });
   });
@@ -929,8 +1052,8 @@ body.light{background:var(--white);color:var(--navy)}
     });
   });
   $('size').addEventListener('input',function(){size=Number(this.value)});
-  $('undo').addEventListener('click',function(){strokes.pop();redraw();saveBoard();say('Last item removed.')});
-  $('clear').addEventListener('click',function(){strokes=[];redraw();saveBoard();say('Page cleared.')});
+  $('undo').addEventListener('click',function(){dropSel();strokes.pop();redraw();saveBoard();say('Last item removed.')});
+  $('clear').addEventListener('click',function(){dropSel();strokes=[];redraw();saveBoard();say('Page cleared.')});
   $('pic').addEventListener('change',function(){
     var f=this.files&&this.files[0];if(!f)return;
     var img=new Image();
