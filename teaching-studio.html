@@ -184,7 +184,6 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 265px) * 79 / 36 + 142px)
 .gate{max-width:640px;text-align:left;margin-bottom:34px;padding:26px 30px}
 .gate h2{font-size:26px;font-weight:500;margin:0 0 10px}
 .gate ul{margin:0;padding-left:22px}
-.blocked .hero{opacity:.35}
 .blocked #start,.blocked .drop{display:none}
 
 /* instructor setup */
@@ -478,7 +477,7 @@ body.light{background:var(--white);color:var(--navy)}
           <li id="have1"></li>
           <li id="have2"></li>
         </ul>
-        <p>Upload both files to the assignment. Then you are done.</p>
+        <p>Upload both files the way your assignment instructions say. Then you are done.</p>
         <div class="row">
           <button type="button" id="backd3">Back</button>
           <button type="button" id="fresh">Start a new problem</button>
@@ -500,6 +499,7 @@ body.light{background:var(--white);color:var(--navy)}
           <li>Your entries are saved on this computer only.</li>
         </ul>
         <div id="weeks"></div>
+        <p style="margin:6px 0 0"><input type="checkbox" id="usestudio" checked style="width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0"><label for="usestudio">Students turn in the video through Canvas Studio, so it gets captions</label></p>
         <div class="row">
           <button type="button" id="addweek">Add another assignment</button>
           <button type="button" id="makeall" class="primary">Make links and instructions</button>
@@ -759,6 +759,13 @@ body.light{background:var(--white);color:var(--navy)}
     else if(e.key==='Escape'){closeText(false);stage.focus()}
   });
   $('textin').addEventListener('blur',function(){closeText(true)});
+  /* typed text must be typed: pasting and dropping text into the board are turned off */
+  ['paste','drop'].forEach(function(ev){
+    $('textin').addEventListener(ev,function(e){e.preventDefault();say('Pasting is turned off here. Type your text.')});
+  });
+  $('textin').addEventListener('beforeinput',function(e){
+    if(e.inputType==='insertFromPaste'||e.inputType==='insertFromDrop'||e.inputType==='insertFromYank'){e.preventDefault();say('Pasting is turned off here. Type your text.')}
+  });
   stage.addEventListener('keydown',function(e){
     if(tool!=='text'||(e.key!=='Enter'&&e.key!==' '))return;
     e.preventDefault();
@@ -1153,6 +1160,8 @@ body.light{background:var(--white);color:var(--navy)}
     });
   }
   drawWeeks();
+  try{if(localStorage.getItem('chalkcast-studio')==='off')$('usestudio').checked=false}catch(e){}
+  $('usestudio').addEventListener('change',function(){try{localStorage.setItem('chalkcast-studio',this.checked?'on':'off')}catch(e){}$('out').textContent=''});
   $('addweek').addEventListener('click',function(){
     weeks.push({label:'Week '+(weeks.length+1),problem:'',rubric:'',limit:weeks[weeks.length-1].limit});
     saveWeeks();drawWeeks();$('wk'+(weeks.length-1)+'problem').focus();
@@ -1164,7 +1173,9 @@ body.light{background:var(--white);color:var(--navy)}
   }
   function instructions(w){
     var link=linkFor(w),mins=Number(w.limit)/60,rub=rubricItems(w),name=w.label.trim()||'Whiteboard teaching video';
-    var steps=['Open this link in Chrome or Safari: ','Turn on your camera and microphone.','Press Record. Draw and explain the problem out loud. You have '+mins+' minutes.','Press Finish, then download your video and your whiteboard PDF.','Upload both files to this assignment.'];
+    var steps=['Open this link in Chrome or Safari: ','Turn on your camera and microphone.','Press Record. Draw and explain the problem out loud. You have '+mins+' minutes.','Press Finish, then download your video and your whiteboard PDF.'];
+    if($('usestudio').checked)steps.push('In this assignment, press Start Assignment and open the Studio tab. Add your video, press Embed, then press Submit Assignment.','Press New Attempt. On the File Upload tab, upload your whiteboard PDF, then press Submit Assignment.');
+    else steps.push('Upload both files to this assignment.');
     var note='Accommodation or privacy concern? Contact your instructor before you complete this assignment.';
     var text=name+'\n\nProblem: '+w.problem.trim()+'\n\nWhat to do\n'+steps.map(function(t,i){return (i+1)+'. '+t+(i===0?link:'')}).join('\n')
       +(rub.length?'\n\nYou will be graded on\n'+rub.map(function(r){return '- '+r}).join('\n'):'')+'\n\n'+note;
@@ -1241,7 +1252,7 @@ body.light{background:var(--white);color:var(--navy)}
       [['Copy this link',function(){
         if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(function(){say('Link copied. Paste it into Chrome, Edge or Safari.')},function(){say('Copy the address from the bar at the top of this window.')});
         else say('Copy the address from the bar at the top of this window.');
-      },true]]);
+      },true],['Look around anyway',function(){closeGate();say('You can look around, but recording will not work in this window.')}]]);
   }
 
   /* 2. is there unfinished work saved on this device? */

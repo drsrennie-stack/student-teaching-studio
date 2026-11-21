@@ -14,7 +14,7 @@ Status words: Meets, Partly meets, Does not meet, Not tested.
 | Criterion | Level | Status | Notes |
 |---|---|---|---|
 | 1.1.1 Non-text content | A | Partly meets | Icons, logo and decorative art are hidden from assistive technology or labeled. What a student draws on the whiteboard has no text alternative. |
-| 1.2.1 to 1.2.5 Captions and audio description | A, AA | Does not meet | Student videos have no captions or transcript. See section 6. |
+| 1.2.1 to 1.2.5 Captions and audio description | A, AA | Partly meets | chalkcast makes no captions itself. The assignment instructions send the video through Canvas Studio, which adds automatic captions that a person must review and publish. See section 6. |
 | 1.3.1 Info and relationships | A | Meets | Landmarks, one h1 per screen, labels tied to inputs, fieldsets with legends in Instructor setup. |
 | 1.3.2 Meaningful sequence | A | Meets | Reading and focus order follow the visual order. |
 | 1.4.1 Use of color | A | Meets | Recording state is shown in words ("Recording", "Not recording") as well as color. |
@@ -85,7 +85,7 @@ None performed. No screen reader was available for this review. The markup was c
 
 | Limitation | Plan |
 |---|---|
-| No captions or transcript on student videos | Not solved. Speech-to-text built into browsers sends audio to an outside service, which breaks the privacy rule. An on-device option needs a large download and has not been built. Until then, caption any video that is shown to a class using the college's captioning service. |
+| No captions or transcript made by chalkcast | For now, students submit the video through Canvas Studio, which captions it automatically; review and publish those captions. A built-in option is not solved. Speech-to-text built into browsers sends audio to an outside service, which breaks the privacy rule. An on-device option needs a large download and has not been built. Until then, caption any video that is shown to a class using the college's captioning service. |
 | Freehand drawing and shapes need a mouse, finger or stylus | Typed text works by keyboard. Students who cannot use a pointer need an alternative way to complete the assignment through the instructor and DSPS. |
 | The whiteboard PDF is a set of images with no text layer | Add real text for typed items and the rubric page in a later version. |
 | The time limit cannot be extended by the student | Add an extended-time setting to the instructor link. |
