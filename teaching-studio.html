@@ -19,7 +19,7 @@ body{margin:0;background:var(--navy);color:var(--white);font-family:"DM Sans",Ar
 .card :focus-visible{outline-color:var(--terra)}
 .card textarea:focus-visible,.card input:focus-visible{border-color:var(--terra)}
 h1,h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:500;margin:0;line-height:1.1}
-.eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0}
+.eyebrow{font-size:14px;font-weight:500;letter-spacing:.03em;color:var(--gold);margin:0}
 [hidden]{display:none!important}
 
 /* top bar */
@@ -37,17 +37,18 @@ h1,h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:500;margin:0;
 .stepper li.done b{background:var(--white);border-color:var(--white);color:var(--navy)}
 .stepper li[aria-current]{color:var(--white)}
 .stepper li[aria-current] b{background:var(--gold);border-color:var(--gold);color:var(--navy)}
-#msg{margin:0;padding:8px 20px;min-height:40px;background:transparent;color:var(--white);font-size:15px;text-align:center}
+#msg{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:20;margin:0;max-width:min(92vw,640px);padding:11px 20px;border-radius:10px;background:var(--white);color:var(--navy);font-size:15px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+#msg:empty{display:none}
 
 /* buttons and fields */
-button,.btn,select{font:inherit;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--navy);background:transparent;color:var(--navy);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+button,.btn,select{font:inherit;font-size:15px;font-weight:500;letter-spacing:.01em;min-height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--navy);background:transparent;color:var(--navy);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
 button:disabled{opacity:.45;cursor:not-allowed}
 .primary{background:var(--terra);border-color:var(--terra);color:var(--white)}
 .dark button,.dark .btn,.dark select{border-color:var(--white);color:var(--white)}
 .dark select{background:var(--panel)}
 .dark .primary{border-color:#C2734D}
 .dark button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--navy)}
-label{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+label{font-size:15px;font-weight:500}
 textarea,input[type=text],input[type=password]{font:inherit;width:100%;padding:12px 14px;border:1px solid var(--navy);border-radius:8px;background:var(--white);color:var(--navy);margin-top:6px}
 input[type=text],input[type=password]{min-height:44px}
 textarea[readonly]{background:#E9ECF1}
@@ -69,27 +70,27 @@ main{overflow-x:clip}
 .fwd .card > *:nth-child(n+3),.back .card > *:nth-child(n+3){animation-delay:.2s}
 .prog{height:3px;background:rgba(255,255,255,.15)}
 .prog span{display:block;height:100%;width:0;background:var(--gold);transition:width .45s ease}
-html.standalone .screen{min-height:calc(100vh - 115px);display:flex;flex-direction:column;justify-content:center}
+html.standalone .screen{min-height:calc(100vh - 90px);display:flex;flex-direction:column;justify-content:center}
 
 /* big title between steps */
 @keyframes cue{0%{opacity:0;transform:translateY(16px)}22%{opacity:1;transform:none}75%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-16px)}}
 #cue{min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
-html.standalone #cue{min-height:calc(100vh - 115px)}
+html.standalone #cue{min-height:calc(100vh - 90px)}
 #cuetext{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:500;line-height:1.05;font-size:clamp(40px,8vw,100px);margin:0;animation:cue 1.9s ease both}
 
 /* opening screen */
 #s0{text-align:center;align-items:center}
 #s0 h1{font-size:clamp(40px,8vw,92px);margin:14px 0 0}
 #s0 h1 span{display:inline-block;animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
-#s0 h1 .hl{color:#C2734D;font-family:'Sketchname',"Plus Jakarta Sans",Arial,sans-serif;font-weight:400;font-size:1.12em;position:relative}
+#s0 h1 .hl{color:#C2734D;font-family:'Sketchname',"Plus Jakarta Sans",Arial,sans-serif;font-weight:400;font-size:1.5em;line-height:.95;position:relative}
 @keyframes wipe{to{clip-path:inset(-60% -4% -60% -4%)}}
 #s0 h1 svg{position:absolute;left:-4%;bottom:-.5em;width:108%;height:.62em;stroke:none;fill:var(--gold);overflow:visible;clip-path:inset(-60% 104% -60% -4%);animation:wipe .8s cubic-bezier(.3,.6,.3,1) 1s forwards;filter:drop-shadow(0 4px 5px rgba(0,0,0,.55))}
 #s0 .eyebrow,#s0 .tags,#s0 .row{animation:rise .6s ease both}
-#s0 .tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;list-style:none;padding:0;margin:52px 0 0;animation-delay:1.2s}
+#s0 .tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;list-style:none;padding:0;margin:118px 0 0;animation-delay:1.2s}
 #s0 .tags li{font-size:17px;font-weight:400;letter-spacing:.04em;text-transform:lowercase;display:flex;align-items:center;gap:10px}
 #s0 .tags li + li::before{content:"\00B7";color:var(--gold);font-size:22px;line-height:1}
 #s0 .row{justify-content:center;margin-top:30px;animation-delay:1.5s}
-#s0 .row button{min-height:46px;padding:0 44px;font-size:15px}
+#s0 .row button{min-height:46px;padding:0 40px;font-size:17px}
 #start{border:1.5px solid #C2734D;border-radius:8px;background:transparent;color:#E08A63;transition:background .15s ease,color .15s ease}
 #start:hover{background:#C2734D;color:var(--navy)}
 
@@ -113,7 +114,7 @@ html.standalone #cue{min-height:calc(100vh - 115px)}
 .check{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin-top:8px}
 .check video{width:100%;aspect-ratio:4/3;background:var(--navy);border-radius:10px;object-fit:cover;transform:scaleX(-1)}
 .check ul{margin:0;padding-left:20px}
-.meterline{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.meterline{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:15px;font-weight:500}
 .meter{flex:1;max-width:220px;height:12px;border:1px solid currentColor;border-radius:999px;overflow:hidden}
 .meter span{display:block;height:100%;width:0;background:var(--gold)}
 details{width:100%;max-width:780px;margin:20px auto 0;border:1px solid rgba(255,255,255,.18);border-radius:12px;background:var(--panel);padding:8px 20px}
@@ -126,19 +127,18 @@ details > div{padding-bottom:16px}
 .studio .top .in{padding:4px 20px}
 .studio .brand span{font-size:30px}
 .studio .brand svg{height:36px;width:32px}
-.studio #msg{min-height:26px;padding:3px 20px;font-size:14px}
 .fit{margin:0 auto;max-width:1400px}
-html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px))}
+html.standalone .fit{max-width:max(680px,calc((100vh - 265px) * 79 / 36 + 110px))}
 .work{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px}
 .rail{background:var(--navy);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;align-items:center}
-.rail .tool{flex-direction:column;width:76px;min-height:60px;border-radius:12px;font-size:10px;letter-spacing:.08em;padding:8px 2px;gap:4px;border-color:transparent}
+.rail .tool{flex-direction:column;width:76px;min-height:60px;border-radius:10px;font-size:12px;letter-spacing:0;padding:8px 2px;gap:4px;border-color:transparent}
 .rail .tool:hover{border-color:var(--white)}
 .rail hr{width:100%;border:0;border-top:1px solid rgba(255,255,255,.25);margin:2px 0}
 .swatches{display:grid;grid-template-columns:34px 34px;gap:8px}
 .sw{width:34px;min-height:34px;height:34px;padding:0;border-radius:50%;border:2px solid transparent!important;background:transparent!important}
 .sw span{display:block;width:22px;height:22px;border-radius:50%;border:2px solid var(--white)}
 .sw[aria-pressed="true"]{border-color:var(--gold)!important}
-.rail label{font-size:10px}
+.rail label{font-size:12px}
 .rail input[type=range]{width:76px;min-height:30px}
 .rubric{position:absolute;top:35%;right:0;bottom:0;width:18.99%;overflow:auto;padding:4px 12px 10px;color:var(--white)}
 .rubric ul{list-style:none;margin:8px 0 0;padding:0}
@@ -148,10 +148,12 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
 #stage{display:block;width:100%;height:auto;aspect-ratio:1580/720;background:var(--navy);border-radius:10px;touch-action:none;cursor:crosshair}
 .bar{background:var(--navy);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:8px 14px;margin:0 0 10px;display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between}
 .bar > div{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.bar label{font-size:11px}
-#record{min-height:52px;padding:0 28px;font-size:14px}
+.bar label{font-size:14px}
+#record{min-height:52px;padding:0 30px;font-size:17px}
+#record.live{opacity:1;background:#B3261E;border-color:#B3261E}
+#record.live::before{background:var(--white)}
 #record::before{content:"";width:12px;height:12px;border-radius:50%;background:#FF5A5A}
-.pill{border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:8px 14px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:inline-flex;gap:8px;align-items:center}
+.pill{border:0;padding:0;font-size:15px;font-weight:500;display:inline-flex;gap:8px;align-items:center}
 .dot{width:10px;height:10px;border-radius:50%;background:#8a8f99}
 .rec .dot{background:#FF5A5A}
 #timer{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:500;font-size:24px;min-width:64px}
@@ -160,12 +162,18 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
 .warn{background:var(--gold);color:var(--navy);font-weight:700;border-radius:10px;padding:7px 16px;margin:0 0 10px;text-align:center}
 .warn.nudge{animation:nudge .5s ease 2}
 .pager{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:0 0 10px}
-.pager .gap{margin-left:16px}
-#zoomtext{font-size:13px;font-weight:700;letter-spacing:.1em;min-width:56px;text-align:center}
-#pgtext{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;min-width:110px;text-align:center}
+.pager .gap{margin-left:20px}
+.dark .ico{width:44px;padding:0;border-color:transparent}
+.dark .ico:hover:not(:disabled){border-color:rgba(255,255,255,.5)}
+.pager #nopic{font-size:14px}
+#zoomtext{font-size:14px;font-weight:500;min-width:48px;text-align:center}
+#pgtext{font-size:14px;font-weight:500;min-width:96px;text-align:center}
 
 /* result */
 .sub h2{font-size:24px;font-weight:500;margin:6px 0 12px}
+.hand{font-family:'Sketchname',"Plus Jakarta Sans",Arial,sans-serif;font-size:clamp(52px,8vw,84px);line-height:1;color:var(--terra);margin:0 0 54px;text-align:center}
+.hand span{position:relative;display:inline-block}
+.hand svg{position:absolute;left:-4%;bottom:-.5em;width:108%;height:.55em;stroke:none;fill:var(--gold);overflow:visible;clip-path:inset(-60% 104% -60% -4%);animation:wipe .8s cubic-bezier(.3,.6,.3,1) .35s forwards}
 .got{color:var(--terra);font-weight:700;min-height:1.5em;margin:12px 0 0}
 .have{list-style:none;padding:0;margin:8px 0 14px}
 .have li{font-weight:700;padding:6px 0;overflow-wrap:anywhere}
@@ -184,7 +192,7 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
   .card{padding:24px}
   .num{font-size:48px}
 }
-@media (prefers-reduced-motion:reduce){*,*::before{transition:none!important;animation:none!important;scroll-behavior:auto!important}#s0 h1 svg{clip-path:none}}
+@media (prefers-reduced-motion:reduce){*,*::before{transition:none!important;animation:none!important;scroll-behavior:auto!important}#s0 h1 svg,.hand svg{clip-path:none}}
 </style>
 </head>
 <body class="dark">
@@ -204,7 +212,7 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
 
   <!-- opening screen -->
   <section id="s0" class="screen" aria-labelledby="h0">
-    <p class="eyebrow">Student recording studio</p>
+    <p class="eyebrow">student recording studio</p>
     <h1 id="h0" tabindex="-1"><span style="animation-delay:.1s">Teach</span> <span style="animation-delay:.25s">it</span> <span style="animation-delay:.4s">on</span> <span style="animation-delay:.55s">the</span><br><span class="hl" style="animation-delay:.7s">whiteboard<svg viewBox="0 0 400 44" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="brush" x="-5%" y="-60%" width="110%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.55" numOctaves="3" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G" result="d"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -9 6.3" result="gaps"/><feComposite in="d" in2="gaps" operator="in"/></filter></defs><g filter="url(#brush)"><path d="M4 16C40 7 110 8 200 10S350 6 396 11c3 4 0 10-5 12C330 20 260 25 190 25S60 24 12 29C3 27 0 21 4 16z"/><path d="M40 31c80-4 200 0 318-4 3 2 2 6-2 7-100 3-216 1-312 5-5-2-7-6-4-8z" opacity=".8"/></g></svg></span></h1>
     <ul class="tags"><li>Your drawing</li><li>Your camera</li><li>Your voice</li><li>One video</li></ul>
     <div class="row"><button type="button" id="start" class="primary">Start<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
@@ -279,7 +287,7 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
           <span class="meter" aria-hidden="true" style="width:90px"><span class="level"></span></span>
         </div>
         <div>
-          <button type="button" id="back3">Change problem</button>
+          <button type="button" id="back3" class="quiet">Change problem</button>
           <label for="limit">Time limit</label>
           <select id="limit">
             <option value="120">2 min</option>
@@ -290,18 +298,18 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
         </div>
       </div>
       <p id="warn" class="warn">You are not recording yet. Press Record before you start teaching.</p>
-      <div class="pager" role="group" aria-label="Whiteboard pages">
-        <button type="button" id="prevpg">Previous</button>
+      <div class="pager" role="toolbar" aria-label="Pages, zoom and editing">
+        <button type="button" id="prevpg" class="ico" aria-label="Previous page" title="Previous page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
         <span id="pgtext" aria-live="polite">Page 1 of 1</span>
-        <button type="button" id="nextpg">Next</button>
-        <button type="button" id="addpg">Add page</button>
-        <button type="button" id="zoomout" class="gap" disabled>Zoom out</button>
+        <button type="button" id="nextpg" class="ico" aria-label="Next page" title="Next page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button type="button" id="addpg" class="ico" aria-label="Add a page" title="Add a page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM12 11v6M9 14h6"/></svg></button>
+        <button disabled type="button" id="zoomout" class="ico gap" aria-label="Zoom out" title="Zoom out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5M8 11h6"/></svg></button>
         <span id="zoomtext" aria-live="polite">100%</span>
-        <button type="button" id="zoomin">Zoom in</button>
-        <button type="button" id="undo" class="gap">Undo</button>
-        <button type="button" id="clear">Clear page</button>
+        <button type="button" id="zoomin" class="ico" aria-label="Zoom in" title="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5M8 11h6M11 8v6"/></svg></button>
+        <button type="button" id="undo" class="ico gap" aria-label="Undo" title="Undo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6L4 11l5 5M4 11h10a5 5 0 010 10h-3"/></svg></button>
+        <button type="button" id="clear" class="ico" aria-label="Clear this page" title="Clear this page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
         <input class="file" type="file" id="pic" accept="image/*">
-        <label class="btn" for="pic">Add picture</label>
+        <label class="btn ico" for="pic" title="Add a picture"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4"/></svg><span class="sr">Add a picture</span></label>
         <button type="button" id="nopic" hidden>Remove picture</button>
       </div>
       <div class="work">
@@ -381,6 +389,7 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
         </div>
       </div>
       <div id="d4" class="sub" hidden>
+        <p class="hand" aria-hidden="true"><span>nice work<svg viewBox="0 0 400 44" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="brush2" x="-5%" y="-60%" width="110%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.55" numOctaves="3" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G" result="d"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -9 6.3" result="gaps"/><feComposite in="d" in2="gaps" operator="in"/></filter></defs><g filter="url(#brush2)"><path d="M4 16C40 7 110 8 200 10S350 6 396 11c3 4 0 10-5 12C330 20 260 25 190 25S60 24 12 29C3 27 0 21 4 16z"/><path d="M40 31c80-4 200 0 318-4 3 2 2 6-2 7-100 3-216 1-312 5-5-2-7-6-4-8z" opacity=".8"/></g></svg></span></p>
         <h2 id="dh4" tabindex="-1">Now upload both files to the assignment</h2>
         <p>You have downloaded:</p>
         <ul class="have">
@@ -453,7 +462,11 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
   var limitLocked=false;
   var probLines=[],barH=0,PFONT='600 26px "Plus Jakarta Sans",Arial,sans-serif';
 
-  function say(t){$('msg').textContent=t}
+  var sayTimer=null;
+  function say(t){
+    $('msg').textContent=t;clearTimeout(sayTimer);
+    if(t)sayTimer=setTimeout(function(){$('msg').textContent=''},6000);
+  }
 
   /* whiteboard pages: ink, strokes and bgImg always point at the page on screen */
   var pages=[{ink:ink,ictx:ictx,strokes:strokes,bg:null}],pi=0,warned=false,MAXPAGES=12;
@@ -763,6 +776,8 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
     $('instr').disabled=s!=='idle';
     $('back3').disabled=s!=='idle';
     $('pause').textContent=s==='paused'?'Resume':'Pause';
+    $('record').textContent=s==='rec'?'Recording':s==='paused'?'Paused':'Record';
+    $('record').classList.toggle('live',s==='rec');
     $('pill').className='pill'+(s==='rec'?' rec':'');
     $('pilltext').textContent=s==='rec'?'Recording':s==='paused'?'Paused':'Not recording';
     $('warn').hidden=s!=='idle';if(s==='idle')warned=false;
@@ -896,7 +911,7 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 320px) * 79 / 36 + 110px)
   }
   $('tod2').addEventListener('click',function(){$('preview').pause();sub(2)});
   $('tod3').addEventListener('click',function(){sub(3)});
-  $('tod4').addEventListener('click',function(){sub(4);say('Upload both files to the assignment. Then you are done.')});
+  $('tod4').addEventListener('click',function(){sub(4);say('')});
   $('backd1').addEventListener('click',function(){sub(1)});
   $('backd2').addEventListener('click',function(){sub(2)});
   $('backd3').addEventListener('click',function(){sub(3)});
