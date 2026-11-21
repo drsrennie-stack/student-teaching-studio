@@ -28,10 +28,10 @@ h1,h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:500;margin:0;
 .top .in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px 28px;padding:12px 20px;max-width:1400px;margin:0 auto}
 .brand{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:500;font-size:26px;display:flex;align-items:center;gap:14px;line-height:1.2}
 .brand svg{height:60px;width:53px;display:block;stroke:none}
+.brand small{font-family:"DM Sans",Arial,sans-serif;font-size:15px;font-weight:500;letter-spacing:0;text-transform:none;color:inherit;opacity:.8;align-self:flex-end;padding-bottom:6px}
 .brand span{font-family:'Sketchname',"Plus Jakarta Sans",Arial,sans-serif;font-weight:400;font-size:42px;letter-spacing:.01em;line-height:1}
 .dark .quiet{border-color:transparent;color:#C9CEDA;font-size:15px;font-weight:500;letter-spacing:0;text-transform:none;padding:0 10px}
 .dark .quiet:hover{color:var(--white);border-color:rgba(255,255,255,.4)}
-.brand small{font-family:"DM Sans",Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
 .stepper{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;padding:0}
 .stepper li{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#C9CEDA}
 .stepper b{width:28px;height:28px;border-radius:50%;border:1px solid #C9CEDA;display:inline-flex;align-items:center;justify-content:center;font-size:13px;letter-spacing:0}
@@ -265,7 +265,7 @@ body.light{background:var(--white);color:var(--navy)}
 <a class="skip" href="#app">Skip to the studio</a>
 <header class="top">
   <div class="in">
-    <div class="brand"><svg viewBox="122 144 208 236" aria-hidden="true"><g transform="translate(158,120) scale(1.7)"><g transform="translate(0,18)"><g transform="translate(0,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g><g transform="translate(40,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(80,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#F5F1E8"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#F5F1E8"/></g></g></g></svg><span>chalkcast</span></div>
+    <div class="brand"><svg viewBox="122 144 208 236" aria-hidden="true"><g transform="translate(158,120) scale(1.7)"><g transform="translate(0,18)"><g transform="translate(0,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g><g transform="translate(40,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(80,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#F5F1E8"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#F5F1E8"/></g></g></g></svg><span>chalkcast</span><small id="course" hidden></small></div>
     <button type="button" id="theme" class="quiet">Light view</button>
   </div>
   <div class="prog" aria-hidden="true"><span id="prog"></span></div>
@@ -496,9 +496,16 @@ body.light{background:var(--white);color:var(--navy)}
         <ul>
           <li>Add one box for each assignment or week.</li>
           <li>Press the button to get a student link and ready-to-paste instructions for each one.</li>
-          <li>Your entries are saved on this computer only.</li>
+          <li>Your entries are saved on this computer only. Save them to a file to move them or share them.</li>
         </ul>
-        <div id="weeks"></div>
+        <label for="coursename" style="display:block;margin-top:14px">Course or college name shown to students (optional)</label>
+        <input type="text" id="coursename" maxlength="40" placeholder="For example BIO 004" autocomplete="off">
+        <div class="row">
+          <button type="button" id="exportset">Save my assignments to a file</button>
+          <input class="file" type="file" id="importset" accept=".json,application/json">
+          <label class="btn" for="importset">Load assignments from a file</label>
+        </div>
+        <div id="weeks" style="margin-top:18px"></div>
         <p style="margin:6px 0 0"><input type="checkbox" id="usestudio" checked style="width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0"><label for="usestudio">Students turn in the video through Canvas Studio, so it gets captions</label></p>
         <div class="row">
           <button type="button" id="addweek">Add another assignment</button>
@@ -791,31 +798,67 @@ body.light{background:var(--white);color:var(--navy)}
     if(probLines.length>5){probLines=probLines.slice(0,5);probLines[4]+=' ...'}
     barH=42+probLines.length*34+12;
   }
-  var fromLink=new URLSearchParams(location.search).get('problem');
-  if(fromLink){
-    $('problem').value=fromLink;$('problem').readOnly=true;
-    $('phelp').textContent='Your instructor set this problem. It shows at the top of your whiteboard and in your video.';
-  }
-  var setLimit=new URLSearchParams(location.search).get('limit');
-  if(setLimit&&$('limit').querySelector('option[value="'+setLimit.replace(/[^0-9]/g,'')+'"]')){$('limit').value=setLimit;limitLocked=true}
-  /* rubric from the instructor link: a checklist beside the board, never drawn on it */
-  var rubric=[];
-  (new URLSearchParams(location.search).get('rubric')||'').split('\n').forEach(function(t){
-    t=t.trim();if(t&&rubric.length<12)rubric.push({t:t,on:false});
-  });
+  /* what the instructor's link carries: problem, rubric, time limit, course name.
+     New links pack it into one short value (z). Older plain links and the demo link still work. */
+  var fromLink='',rubric=[],demoMode=false;
   function rubCount(){
     var n=rubric.filter(function(r){return r.on}).length;
     $('rubcount').textContent=n+' of '+rubric.length+' covered';
   }
-  if(rubric.length){
-    rubric.forEach(function(r,i){
-      var li=document.createElement('li'),lab=document.createElement('label'),cb=document.createElement('input'),sp=document.createElement('span');
-      cb.type='checkbox';cb.id='rub'+i;lab.htmlFor='rub'+i;sp.textContent=r.t;
-      cb.addEventListener('change',function(){r.on=cb.checked;rubCount();saveBoard()});
-      lab.appendChild(cb);lab.appendChild(sp);li.appendChild(lab);$('rublist').appendChild(li);
+  function applyLink(d){
+    if(d.p){
+      fromLink=String(d.p);
+      $('problem').value=fromLink;$('problem').readOnly=true;
+      $('phelp').textContent='Your instructor set this problem. It shows at the top of your whiteboard and in your video.';
+    }
+    var sec=Math.round(Number(d.l));
+    if(sec>=30&&sec<=7200){
+      var sel=$('limit');
+      if(!sel.querySelector('option[value="'+sec+'"]')){
+        var o=document.createElement('option');o.value=String(sec);o.textContent=(Math.round(sec/6)/10)+' min';sel.appendChild(o);
+      }
+      sel.value=String(sec);limitLocked=true;sel.disabled=true;
+    }
+    (d.r||[]).forEach(function(t){
+      t=String(t).trim();if(t&&rubric.length<12)rubric.push({t:t,on:false});
     });
-    $('rubric').hidden=false;
-    rubCount();
+    if(rubric.length){
+      rubric.forEach(function(r,i){
+        var li=document.createElement('li'),lab=document.createElement('label'),cb=document.createElement('input'),sp=document.createElement('span');
+        cb.type='checkbox';cb.id='rub'+i;lab.htmlFor='rub'+i;sp.textContent=r.t;
+        cb.addEventListener('change',function(){r.on=cb.checked;rubCount();saveBoard()});
+        lab.appendChild(cb);lab.appendChild(sp);li.appendChild(lab);$('rublist').appendChild(li);
+      });
+      $('rubric').hidden=false;
+      rubCount();
+    }
+    if(d.c){$('course').textContent='for '+String(d.c).slice(0,40);$('course').hidden=false}
+    layoutProblem();
+  }
+  function b64url(bytes){var t='';for(var i=0;i<bytes.length;i++)t+=String.fromCharCode(bytes[i]);return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+  function pack(obj){
+    if(!window.CompressionStream||!window.TextEncoder)return Promise.resolve(null);
+    try{
+      var cs=new Blob([new TextEncoder().encode(JSON.stringify(obj))]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+      return new Response(cs).arrayBuffer().then(function(buf){return b64url(new Uint8Array(buf))},function(){return null});
+    }catch(e){return Promise.resolve(null)}
+  }
+  function unpack(z){
+    var t=atob(z.replace(/-/g,'+').replace(/_/g,'/')),bytes=new Uint8Array(t.length);
+    for(var i=0;i<t.length;i++)bytes[i]=t.charCodeAt(i);
+    var ds=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    return new Response(ds).text().then(function(x){return JSON.parse(x)});
+  }
+  var qs=new URLSearchParams(location.search),linkError=false,linkReady;
+  if(qs.has('demo')){
+    demoMode=true;
+    applyLink({p:'Draw and label the four chambers of the heart. Then trace the path of blood through them.',r:['Labels all four chambers','Shows the direction of blood flow','Explains each step out loud'],l:60,c:'demo'});
+    linkReady=Promise.resolve();
+  }else if(qs.get('z')){
+    linkReady=(window.DecompressionStream?unpack(qs.get('z')):Promise.reject()).then(applyLink,function(){linkError=true;layoutProblem()});
+  }else{
+    applyLink({p:qs.get('problem')||'',l:qs.get('limit')||0,r:(qs.get('rubric')||'').split('\n'),c:qs.get('course')||''});
+    linkReady=Promise.resolve();
   }
   function wrapText(c,t,maxW){
     var lines=[],line='';
@@ -856,6 +899,7 @@ body.light{background:var(--white);color:var(--navy)}
     if(live&&(live.tool==='hi'||live.a))drawStroke(ctx,live);
     ctx.restore();
     ctx.setTransform(1,0,0,1,0,0);
+    if(demoMode){ctx.save();ctx.fillStyle=lightView?'#070A15':'#FFFFFF';ctx.globalAlpha=.7;ctx.font='500 20px "DM Sans",Arial,sans-serif';ctx.textAlign='center';ctx.fillText('chalkcast demo',W+SIDE/2,H-28);ctx.restore()}
     if(camOn&&cam.readyState>=2&&cam.videoWidth){
       var D=220,cx=W+SIDE/2,cy=20+D/2;
       var s=Math.min(cam.videoWidth,cam.videoHeight);
@@ -1167,12 +1211,17 @@ body.light{background:var(--white);color:var(--navy)}
     saveWeeks();drawWeeks();$('wk'+(weeks.length-1)+'problem').focus();
   });
   function rubricItems(w){return w.rubric.split('\n').map(function(x){return x.trim()}).filter(Boolean).slice(0,12)}
-  function linkFor(w){
-    var rub=rubricItems(w).join('\n');
-    return location.href.split('#')[0].split('?')[0]+'?problem='+encodeURIComponent(w.problem.trim())+'&limit='+w.limit+(rub?'&rubric='+encodeURIComponent(rub):'');
+  /* one link per assignment, plus extended-time versions */
+  function makeLink(w,mult){
+    var base=location.href.split('#')[0].split('?')[0],rub=rubricItems(w),sec=Math.round(Number(w.limit)*mult),course=$('coursename').value.trim();
+    var d={p:w.problem.trim(),l:sec};if(rub.length)d.r=rub;if(course)d.c=course;
+    return pack(d).then(function(z){
+      if(z)return base+'?z='+z;
+      return base+'?problem='+encodeURIComponent(d.p)+'&limit='+sec+(rub.length?'&rubric='+encodeURIComponent(rub.join('\n')):'')+(course?'&course='+encodeURIComponent(course):'');
+    });
   }
-  function instructions(w){
-    var link=linkFor(w),mins=Number(w.limit)/60,rub=rubricItems(w),name=w.label.trim()||'Whiteboard teaching video';
+  function instructions(w,link){
+    var mins=Number(w.limit)/60,rub=rubricItems(w),name=w.label.trim()||'Whiteboard teaching video';
     var steps=['Open this link in Chrome or Safari: ','Turn on your camera and microphone.','Press Record. Draw and explain the problem out loud. You have '+mins+' minutes.','Press Finish, then download your video and your whiteboard PDF.'];
     if($('usestudio').checked)steps.push('In this assignment, press Start Assignment and open the Studio tab. Add your video, press Embed, then press Submit Assignment.','Press New Attempt. On the File Upload tab, upload your whiteboard PDF, then press Submit Assignment.');
     else steps.push('Upload both files to this assignment.');
@@ -1198,26 +1247,68 @@ body.light{background:var(--white);color:var(--navy)}
       if(!weeks[i].problem.trim()){say('Assignment '+(i+1)+' needs a problem.');$('wk'+i+'problem').focus();return}
     }
     var out=$('out');out.textContent='';
-    var all=weeks.map(instructions);
-    if(weeks.length>1){
-      var row=el('div',{'class':'row'}),ca=el('button',{type:'button'},'Copy all instructions');
-      ca.addEventListener('click',function(){
-        copyRich(all.map(function(x){return x.html}).join('<hr>'),all.map(function(x){return x.text}).join('\n\n----------\n\n'),function(){say('All instructions copied.')});
+    Promise.all(weeks.map(function(w){return Promise.all([makeLink(w,1),makeLink(w,1.5),makeLink(w,2)])})).then(function(links){
+      var all=weeks.map(function(w,i){return instructions(w,links[i][0])});
+      if(weeks.length>1){
+        var row=el('div',{'class':'row'}),ca=el('button',{type:'button'},'Copy all instructions');
+        ca.addEventListener('click',function(){
+          copyRich(all.map(function(x){return x.html}).join('<hr>'),all.map(function(x){return x.text}).join('\n\n----------\n\n'),function(){say('All instructions copied.')});
+        });
+        row.appendChild(ca);out.appendChild(row);
+      }
+      weeks.forEach(function(w,i){
+        var r=all[i],sec=el('section',{'class':'outwk'}),name=w.label.trim()||('Assignment '+(i+1));
+        sec.appendChild(el('h2',{},name));
+        var lid='outlink'+i,inp=el('input',{type:'text',id:lid,readonly:''});inp.value=r.link;
+        sec.appendChild(el('label',{'for':lid},'Student link'));sec.appendChild(inp);
+        var pv=el('div',{'class':'preview'});pv.innerHTML=r.html;sec.appendChild(pv);
+        var row=el('div',{'class':'row'}),b1=el('button',{type:'button'},'Copy link'),b2=el('button',{type:'button','class':'primary'},'Copy instructions');
+        b1.addEventListener('click',function(){copyRich('',r.link,function(){say('Link copied for '+name+'.')})});
+        b2.addEventListener('click',function(){copyRich(r.html,r.text,function(){say('Instructions copied for '+name+'.')})});
+        row.appendChild(b1);row.appendChild(b2);sec.appendChild(row);
+        /* extended time: separate links to send privately to a student with that accommodation */
+        var xt=el('div',{'class':'row'});xt.appendChild(el('span',{},'Extended time links:'));
+        [[1,'Time and a half',1.5],[2,'Double time',2]].forEach(function(o){
+          var mins=Math.round(Number(w.limit)*o[2]/6)/10,bx=el('button',{type:'button'},'Copy '+o[1].toLowerCase()+' ('+mins+' min)');
+          bx.addEventListener('click',function(){copyRich('',links[i][o[0]],function(){say(o[1]+' link copied for '+name+'. Send it only to the student who needs it.')})});
+          xt.appendChild(bx);
+        });
+        sec.appendChild(xt);out.appendChild(sec);
       });
-      row.appendChild(ca);out.appendChild(row);
-    }
-    weeks.forEach(function(w,i){
-      var r=all[i],sec=el('section',{'class':'outwk'}),name=w.label.trim()||('Assignment '+(i+1));
-      sec.appendChild(el('h2',{},name));
-      var lid='outlink'+i,inp=el('input',{type:'text',id:lid,readonly:''});inp.value=r.link;
-      sec.appendChild(el('label',{'for':lid},'Student link'));sec.appendChild(inp);
-      var pv=el('div',{'class':'preview'});pv.innerHTML=r.html;sec.appendChild(pv);
-      var row=el('div',{'class':'row'}),b1=el('button',{type:'button'},'Copy link'),b2=el('button',{type:'button','class':'primary'},'Copy instructions');
-      b1.addEventListener('click',function(){copyRich('',r.link,function(){say('Link copied for '+name+'.')})});
-      b2.addEventListener('click',function(){copyRich(r.html,r.text,function(){say('Instructions copied for '+name+'.')})});
-      row.appendChild(b1);row.appendChild(b2);sec.appendChild(row);out.appendChild(sec);
+      say(weeks.length===1?'Link and instructions are ready below.':weeks.length+' links and sets of instructions are ready below.');
     });
-    say(weeks.length===1?'Link and instructions are ready below.':weeks.length+' links and sets of instructions are ready below.');
+  });
+
+  /* course name, and saving or loading a whole set of assignments as a file */
+  try{$('coursename').value=localStorage.getItem('chalkcast-course')||''}catch(e){}
+  $('coursename').addEventListener('input',function(){try{localStorage.setItem('chalkcast-course',this.value)}catch(e){}$('out').textContent=''});
+  $('exportset').addEventListener('click',function(){
+    var data={app:'chalkcast',version:1,course:$('coursename').value.trim(),studio:$('usestudio').checked,assignments:weeks};
+    var a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+    a.href=u;a.download='chalkcast-assignments.json';document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(u)},30000);
+    say('Saved '+weeks.length+(weeks.length===1?' assignment':' assignments')+' to a file.');
+  });
+  $('importset').addEventListener('change',function(){
+    var f=this.files&&this.files[0],inp=this;if(!f)return;
+    var rd=new FileReader();
+    rd.onerror=function(){say('That file could not be read.')};
+    rd.onload=function(){
+      try{
+        var d=JSON.parse(rd.result),list=d&&d.app==='chalkcast'&&Array.isArray(d.assignments)?d.assignments:null;
+        if(!list||!list.length)throw 0;
+        weeks=list.slice(0,60).map(function(w,i){
+          var lim=String(w.limit);
+          return{label:String(w.label||('Week '+(i+1))).slice(0,80),problem:String(w.problem||''),rubric:String(w.rubric||''),limit:['120','180','300','600'].indexOf(lim)>-1?lim:'300'};
+        });
+        if(typeof d.course==='string'){$('coursename').value=d.course.slice(0,40);try{localStorage.setItem('chalkcast-course',$('coursename').value)}catch(e){}}
+        if(typeof d.studio==='boolean')$('usestudio').checked=d.studio;
+        saveWeeks();drawWeeks();$('out').textContent='';
+        say('Loaded '+weeks.length+(weeks.length===1?' assignment.':' assignments.'));
+      }catch(e){say('That is not a chalkcast assignments file.')}
+      inp.value='';
+    };
+    rd.readAsText(f);
   });
 
   /* opening-screen notices */
@@ -1272,8 +1363,12 @@ body.light{background:var(--white);color:var(--navy)}
     if(rubric.length)rubCount();
     updatePager();setZoom(1);
   }
+  linkReady.then(function(){
+    if(linkError&&!blocked.length)gate('This link could not be opened',['The assignment link is damaged or cut short.','Open the link from your assignment again.','If it still fails, update your browser or tell your instructor.'],[['Continue without it',closeGate]]);
+    if(demoMode&&!blocked.length)say('This is a demo. Recordings stop at one minute.');
+  });
   if(!setupMode&&!blocked.length){
-    openDb().then(function(ok){
+    linkReady.then(openDb).then(function(ok){
       if(!ok)return;
       Promise.all([dbRead('kv','board'),dbRead('kv','rec'),dbRead('chunks')]).then(function(v){
         var b=v[0],r=v[1],parts=v[2]||[],now=Date.now();

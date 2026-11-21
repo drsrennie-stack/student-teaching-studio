@@ -1,0 +1,45 @@
+<!--
+  chalkcast: code for your Kajabi pages
+  Paste each block into a Custom Code block in Kajabi.
+
+  SIMPLEST OPTION (recommended): do not embed at all. Put a button on your members-only page
+  that opens Instructor setup in a new tab. Everything works there with no extra settings.
+-->
+
+<!-- 1. BUTTON that opens Instructor setup in a new tab (members-only page) -->
+<a href="https://drsrennie-stack.github.io/student-teaching-studio/teaching-studio.html?setup"
+   target="_blank" rel="noopener"
+   style="display:inline-block;padding:14px 28px;border-radius:8px;background:#8B3A2E;color:#FFFFFF;font-family:'DM Sans',Arial,sans-serif;font-weight:500;font-size:17px;text-decoration:none">
+  Open Instructor setup
+</a>
+
+
+<!-- 2. EMBED Instructor setup inside the members-only page (optional)
+     The allow line is required. Without it the browser blocks copying links
+     and blocks the camera if an instructor previews the student view.
+     Note: inside an embed, some browsers do not remember saved entries between visits.
+     Instructors should use "Save my assignments to a file" to keep their work. -->
+<iframe id="chalkcast-setup"
+        src="https://drsrennie-stack.github.io/student-teaching-studio/teaching-studio.html?setup"
+        title="chalkcast Instructor setup"
+        allow="camera; microphone; clipboard-write"
+        style="width:100%;min-height:900px;border:0"></iframe>
+<script>
+  /* Resizes the frame to fit the page inside it. */
+  window.addEventListener('message', function (e) {
+    if (e.origin !== 'https://drsrennie-stack.github.io') return;
+    var d = e.data;
+    if (d && d.id === 'teaching-studio' && d.type === 'iframe-height') {
+      document.getElementById('chalkcast-setup').style.height = d.height + 'px';
+    }
+  });
+</script>
+
+
+<!-- 3. TRY-IT BUTTON for your public sales page
+     Opens the demo: a sample problem and a one-minute recording limit. -->
+<a href="https://drsrennie-stack.github.io/student-teaching-studio/teaching-studio.html?demo"
+   target="_blank" rel="noopener"
+   style="display:inline-block;padding:14px 28px;border-radius:8px;border:1.5px solid #8B3A2E;color:#8B3A2E;font-family:'DM Sans',Arial,sans-serif;font-weight:500;font-size:17px;text-decoration:none">
+  Try the one-minute demo
+</a>

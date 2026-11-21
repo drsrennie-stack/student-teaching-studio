@@ -26,7 +26,7 @@ Status words: Meets, Partly meets, Does not meet, Not tested.
 | 1.4.12 Text spacing | AA | Not tested | |
 | 2.1.1 Keyboard | A | Partly meets | Every button, menu and field works by keyboard. Typed text can be placed on the board by keyboard. Freehand drawing, shapes, the Move tool and placing text at a chosen spot need a pointer. |
 | 2.1.2 No keyboard trap | A | Meets | Verified by tabbing through every screen. |
-| 2.2.1 Timing adjustable | A | Partly meets | The recording time limit is set by the instructor and cannot be extended by the student. Status notices disappear after 6 seconds. |
+| 2.2.1 Timing adjustable | A | Partly meets | The recording time limit is set by the instructor. Instructor setup makes time-and-a-half and double-time links for students with that accommodation; a student cannot extend the time on their own. Status notices disappear after 6 seconds. |
 | 2.3.1 Three flashes | A | Meets | No flashing content. |
 | 2.3.3 Animation from interactions | AAA | Meets | All motion is turned off when the device asks for reduced motion. |
 | 2.4.1 Bypass blocks | A | Meets | Skip link at the top of the page. |
@@ -88,7 +88,7 @@ None performed. No screen reader was available for this review. The markup was c
 | No captions or transcript made by chalkcast | For now, students submit the video through Canvas Studio, which captions it automatically; review and publish those captions. A built-in option is not solved. Speech-to-text built into browsers sends audio to an outside service, which breaks the privacy rule. An on-device option needs a large download and has not been built. Until then, caption any video that is shown to a class using the college's captioning service. |
 | Freehand drawing and shapes need a mouse, finger or stylus | Typed text works by keyboard. Students who cannot use a pointer need an alternative way to complete the assignment through the instructor and DSPS. |
 | The whiteboard PDF is a set of images with no text layer | Add real text for typed items and the rubric page in a later version. |
-| The time limit cannot be extended by the student | Add an extended-time setting to the instructor link. |
+| The time limit cannot be extended by the student on their own | Done in part: the instructor can send a time-and-a-half or double-time link. Other multipliers are not offered yet. |
 | Not tested with a screen reader, on iPad, in Safari, or at 200 percent zoom | Test before the tool is offered for sale. |
 
 ## 7. Reviewer
