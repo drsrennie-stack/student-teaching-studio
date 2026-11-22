@@ -196,6 +196,32 @@ html.standalone #s5{justify-content:flex-start}
 .week label{display:block;margin-top:12px}
 .week select{margin-top:6px;display:flex}
 .week .rm{margin-top:14px}
+.week .bankbtn{display:block;margin:10px 0 2px}
+.week .hint{font-size:14px;color:#4A5060;margin:6px 0 0}
+#bank{border:0;border-radius:14px;padding:0;width:min(900px,94vw);max-height:88vh;background:#fff;color:#070A15;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+#bank::backdrop{background:rgba(7,10,21,.72)}
+#bank .bhead{position:sticky;top:0;background:#fff;padding:20px 24px 14px;border-bottom:1px solid #D5D8DE;z-index:1}
+#bank h3{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:600;font-size:24px;margin:0 0 4px;color:#070A15}
+#bank .bsub{margin:0 0 12px;font-size:15px;color:#4A5060}
+#bank .brow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+#bank .brow label{display:block;font-size:14px;font-weight:500;margin:0 0 4px;color:#070A15}
+#bank select{font:inherit;font-size:16px;padding:9px 10px;border:1px solid #6B7280;border-radius:8px;background:#fff;color:#070A15;max-width:100%}
+#bank .btype{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+#bank button{font:inherit;font-size:15px;font-weight:500;border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid #070A15;background:#fff;color:#070A15}
+#bank button[aria-pressed="true"]{background:#070A15;color:#fff}
+#bank button.use{background:#8B3A2E;border-color:#8B3A2E;color:#fff}
+#bank button:focus-visible,#bank select:focus-visible,#bank summary:focus-visible{outline:3px solid #8B3A2E;outline-offset:2px}
+#bank .bclose{position:absolute;right:16px;top:16px}
+#bank .bbody{padding:16px 24px 24px}
+#bank .bcan{font-size:15px;color:#070A15;background:#F4F5F7;border-radius:8px;padding:10px 12px;margin:0 0 14px}
+#bank .bitem{border:1px solid #D5D8DE;border-radius:10px;padding:14px 16px;margin:0 0 12px}
+#bank .btag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8B3A2E;margin:0 0 6px}
+#bank .bq{margin:0 0 10px;font-size:16px;line-height:1.45}
+#bank details{font-size:15px;margin:0 0 10px;color:#070A15;background:#F4F5F7;border:0;border-radius:8px;padding:8px 12px;max-width:none;width:auto}
+#bank details p{margin:8px 0 0}
+#bank .bq{white-space:pre-line}
+#bank summary{cursor:pointer;font-weight:500;text-transform:none;letter-spacing:0;font-size:15px;color:#070A15}
+#bank #bankmsg{font-size:15px;color:#8B3A2E;margin:0}
 .outwk{border-top:1px solid var(--line);margin-top:22px;padding-top:18px}
 .outwk h2{font-size:24px;font-weight:500;margin:0 0 8px}
 .preview{background:#F2F3F6;border-radius:8px;padding:14px 20px;margin:12px 0}
@@ -515,6 +541,23 @@ body.light{background:var(--white);color:var(--navy)}
           <button type="button" id="makeall" class="primary">Make links and instructions</button>
         </div>
         <div id="out" aria-live="polite"></div>
+        <dialog id="bank" aria-labelledby="bankh">
+          <div class="bhead">
+            <h3 id="bankh">Question bank</h3>
+            <p class="bsub">Pick a question. It fills in the problem and a starter rubric, and you can edit both.</p>
+            <button type="button" class="bclose" id="bankclose">Close</button>
+            <div class="brow">
+              <div><label for="bankunit">Unit</label><select id="bankunit"></select></div>
+              <div><label for="bankcomp">Competency</label><select id="bankcomp"></select></div>
+            </div>
+            <div class="btype" role="group" aria-label="Kind of question">
+              <button type="button" data-bt="all" aria-pressed="true">All</button>
+              <button type="button" data-bt="mc" aria-pressed="false">Multiple choice, then teach it</button>
+              <button type="button" data-bt="draw" aria-pressed="false">Draw to know it</button>
+            </div>
+          </div>
+          <div class="bbody"><p id="bankmsg" role="status">Loading the question bank.</p><div id="banklist"></div></div>
+        </dialog>
         <div class="row"><button type="button" class="leave5">See the student view</button></div>
       </div>
     </div>
@@ -909,14 +952,17 @@ body.light{background:var(--white);color:var(--navy)}
     var t=$('problem').value.trim();probLines=[];barH=0;
     if(!t)return;
     ctx.save();ctx.font=PFONT;
-    var line='';
-    t.split(/\s+/).forEach(function(w){
-      var test=line?line+' '+w:w;
-      if(line&&ctx.measureText(test).width>W-48){probLines.push(line);line=w}else line=test;
+    /* each line the instructor typed stays on its own line, and long lines wrap */
+    t.split(/\n+/).forEach(function(par){
+      var line='';
+      par.trim().split(/\s+/).forEach(function(w){
+        var test=line?line+' '+w:w;
+        if(line&&ctx.measureText(test).width>W-48){probLines.push(line);line=w}else line=test;
+      });
+      if(line)probLines.push(line);
     });
-    if(line)probLines.push(line);
     ctx.restore();
-    if(probLines.length>5){probLines=probLines.slice(0,5);probLines[4]+=' ...'}
+    if(probLines.length>7){probLines=probLines.slice(0,7);probLines[6]+=' ...'}
     barH=42+probLines.length*34+12;
   }
   /* what the instructor's link carries: problem, rubric, time limit, course name.
@@ -1313,6 +1359,10 @@ body.light{background:var(--white);color:var(--navy)}
         fs.appendChild(el('label',{'for':node.id},lab));fs.appendChild(node);
       }
       field('Name, for example Week 3','label',el('input',{type:'text'}));
+      var bb=el('button',{type:'button','class':'bankbtn'},'Choose from the question bank');
+      bb.addEventListener('click',function(){openBank(i)});
+      fs.appendChild(bb);
+      fs.appendChild(el('p',{'class':'hint'},'Or write your own problem and rubric in the boxes here.'));
       field('Problem to show on the board','problem',el('textarea',{rows:'3'}));
       field('Rubric, one item per line (optional)','rubric',el('textarea',{rows:'4'}));
       var sel=el('select',{});
@@ -1326,6 +1376,67 @@ body.light{background:var(--white);color:var(--navy)}
       box.appendChild(fs);
     });
   }
+  /* Question bank: loaded only when an instructor opens it, so student links stay light */
+  var BANK_FILE='chalkcast-bank-bio004.js',bankFor=0,bankType='all';
+  var RUBRICS={
+    draw:['Shows every part the problem asks for','Labels each part with the correct term','Shows how the parts connect, or the order they go in','Explains the reason behind each step out loud','Uses your own words, not notes'],
+    mc:['Says which answer you chose','Draws a model that supports your choice','Explains why your answer is correct','Explains why one other option does not fit','Uses the correct terms']
+  };
+  function bankUnits(){return window.CHALKCAST_BANK.units}
+  function fillBankComps(){
+    var u=bankUnits()[+$('bankunit').value],c=$('bankcomp');c.textContent='';
+    u.comps.forEach(function(k,j){c.appendChild(el('option',{value:j},k.name))});
+    showBankItems();
+  }
+  function showBankItems(){
+    var k=bankUnits()[+$('bankunit').value].comps[+$('bankcomp').value],box=$('banklist');box.textContent='';
+    box.appendChild(el('p',{'class':'bcan'},'Students should be able to: '+k.can));
+    var shown=0;
+    k.items.forEach(function(it){
+      if(bankType!=='all'&&it.t!==bankType)return;shown++;
+      var a=el('div',{'class':'bitem'});
+      a.appendChild(el('div',{'class':'btag'},it.t==='mc'?'Multiple choice, then teach it':'Draw to know it'));
+      a.appendChild(el('p',{'class':'bq'},it.q));
+      if(it.t==='mc'){
+        var d=el('details',{});d.appendChild(el('summary',{},'Answer and explanation (students do not see this)'));
+        d.appendChild(el('p',{},'Answer: '+it.ans));d.appendChild(el('p',{},it.why));a.appendChild(d);
+      }
+      var b=el('button',{type:'button','class':'use'},'Use this question');
+      b.addEventListener('click',function(){
+        var w=weeks[bankFor];w.problem=it.q;w.rubric=RUBRICS[it.t].join('\n');
+        if(!w.label||/^Week \d+$/.test(w.label))w.label=k.name.slice(0,60);
+        saveWeeks();drawWeeks();$('out').textContent='';$('bank').close();
+        say('Question and starter rubric added. You can edit both.');
+        var f=$('wk'+bankFor+'problem');if(f)f.focus();
+      });
+      a.appendChild(b);box.appendChild(a);
+    });
+    $('bankmsg').textContent=shown?'':'There are no questions of this kind for this competency yet.';
+  }
+  function fillBank(){
+    var u=$('bankunit');u.textContent='';
+    bankUnits().forEach(function(x,j){u.appendChild(el('option',{value:j},'Week '+x.week+': '+x.system))});
+    $('bankh').textContent='Question bank: '+window.CHALKCAST_BANK.course;
+    fillBankComps();
+  }
+  function openBank(i){
+    bankFor=i;var d=$('bank');if(d.showModal)d.showModal();else d.setAttribute('open','');
+    if(window.CHALKCAST_BANK){if(!$('bankunit').options.length)fillBank();return}
+    var sc=document.createElement('script');sc.src=BANK_FILE;
+    sc.onload=function(){if(window.CHALKCAST_BANK)fillBank();else $('bankmsg').textContent='The question bank file loaded, but it has no questions in it.'};
+    sc.onerror=function(){$('bankmsg').textContent='The question bank did not load. Check that '+BANK_FILE+' is in the same folder as this page.'};
+    document.head.appendChild(sc);
+  }
+  $('bankunit').addEventListener('change',fillBankComps);
+  $('bankcomp').addEventListener('change',showBankItems);
+  $('bankclose').addEventListener('click',function(){$('bank').close()});
+  [].forEach.call(document.querySelectorAll('#bank [data-bt]'),function(b){
+    b.addEventListener('click',function(){
+      bankType=b.getAttribute('data-bt');
+      [].forEach.call(document.querySelectorAll('#bank [data-bt]'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+      if(window.CHALKCAST_BANK)showBankItems();
+    });
+  });
   drawWeeks();
   try{if(localStorage.getItem('chalkcast-studio')==='off')$('usestudio').checked=false}catch(e){}
   $('usestudio').addEventListener('change',function(){try{localStorage.setItem('chalkcast-studio',this.checked?'on':'off')}catch(e){}$('out').textContent=''});
@@ -1351,7 +1462,7 @@ body.light{background:var(--white);color:var(--navy)}
     var note='Accommodation or privacy concern? Contact your instructor before you complete this assignment.';
     var text=name+'\n\nProblem: '+w.problem.trim()+'\n\nWhat to do\n'+steps.map(function(t,i){return (i+1)+'. '+t+(i===0?link:'')}).join('\n')
       +(rub.length?'\n\nYou will be graded on\n'+rub.map(function(r){return '- '+r}).join('\n'):'')+'\n\n'+note;
-    var html='<h3>'+esc(name)+'</h3><p><strong>Problem:</strong> '+esc(w.problem.trim())+'</p><p><strong>What to do</strong></p><ol>'
+    var html='<h3>'+esc(name)+'</h3><p><strong>Problem:</strong> '+esc(w.problem.trim()).replace(/\n+/g,'<br>')+'</p><p><strong>What to do</strong></p><ol>'
       +steps.map(function(t,i){return '<li>'+esc(t)+(i===0?'<a href="'+esc(link)+'" target="_blank" rel="noopener">'+esc(name)+' whiteboard</a>':'')+'</li>'}).join('')+'</ol>'
       +(rub.length?'<p><strong>You will be graded on</strong></p><ul>'+rub.map(function(r){return '<li>'+esc(r)+'</li>'}).join('')+'</ul>':'')+'<p>'+esc(note)+'</p>';
     return{link:link,text:text,html:html};
