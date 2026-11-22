@@ -196,6 +196,19 @@ html.standalone #s5{justify-content:flex-start}
 .week label{display:block;margin-top:12px}
 .week select{margin-top:6px;display:flex}
 .week .rm{margin-top:14px}
+.defense{border-top:1px solid var(--line);margin-top:30px;padding-top:24px}
+.defense h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:600;font-size:24px;margin:0 0 6px}
+.defense .hint{font-size:14px;color:#4A5060;margin:10px 0 0}
+.defense pre{white-space:pre-wrap;font:inherit;font-size:15px;line-height:1.45;background:#F4F5F7;color:#070A15;border-radius:10px;padding:14px 16px;margin:8px 0 10px}
+.defense .ck{margin:12px 0 0}.defense .ck input{width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0}
+.defense label{display:block;margin:14px 0 6px}.defense .ck label{display:inline;margin:0}.defense select{display:block}
+#drules ul{margin:8px 0 0;padding-left:22px}#drules li{margin:0 0 6px}
+#drules .dfacts{list-style:none;padding:0;margin:0 0 6px}
+#drules h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:600;font-size:20px;margin:16px 0 4px}
+.smallnote{max-width:640px;margin:0 auto 22px;background:#D9B45A;color:#070A15;border-radius:10px;padding:12px 16px;font-size:16px;font-weight:500;line-height:1.4;text-align:left}
+body.nowb .rail,body.nowb .pager{display:none}
+body.nowb .work{grid-template-columns:minmax(0,1fr)}
+body.nowb #stage{cursor:default}
 .week .bankbtn{display:block;margin:10px 0 2px}
 .week .hint{font-size:14px;color:#4A5060;margin:6px 0 0}
 #bank{border:0;border-radius:14px;padding:0;width:min(900px,94vw);max-height:88vh;background:#fff;color:#070A15;box-shadow:0 30px 80px rgba(0,0,0,.6)}
@@ -311,6 +324,7 @@ body.light{background:var(--white);color:var(--navy)}
       <ul id="gatelist"></ul>
       <div class="row" id="gaterow"></div>
     </div>
+    <p id="smallnote" class="smallnote" role="note" hidden>This works best on a computer or a tablet. On a phone the whiteboard is small and hard to draw on. If you can, open this link on a bigger screen.</p>
     <ul class="tags"><li>Your drawing</li><li>Your camera</li><li>Your voice</li><li>One video</li></ul>
     <div class="hero">
     <h1 id="h0" tabindex="-1"><span style="animation-delay:.1s">Teach</span> <span style="animation-delay:.25s">it</span> <span style="animation-delay:.4s">on</span> <span style="animation-delay:.55s">the</span><br><span class="hl" style="animation-delay:.7s">whiteboard<svg class="line" viewBox="0 0 400 44" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="brush" x="-5%" y="-60%" width="110%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.55" numOctaves="3" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G" result="d"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -9 6.3" result="gaps"/><feComposite in="d" in2="gaps" operator="in"/></filter></defs><g filter="url(#brush)"><path d="M4 16C40 7 110 8 200 10S350 6 396 11c3 4 0 10-5 12C330 20 260 25 190 25S60 24 12 29C3 27 0 21 4 16z"/></g></svg><svg class="pb" viewBox="0 0 64 64" aria-hidden="true"><rect x="26.500" y="1" width="11" height="33" rx="5.500" fill="#C2734D"/><rect x="17.500" y="32" width="29" height="10" rx="2" fill="#E9E9EE"/><path d="M18.500 42h27c1 7 .5 12-2 17l-2.500 3-2-3-2.500 3.500-2-3.500-2.500 3.500-2-3.500-2.500 3.500-2-3.500-2.500 3-2-3c-2.500-5-3-10-2.500-17z" fill="#D9B45A"/><path d="M22 43.500L21.6 58.500" stroke="#A8802A" stroke-width=".9" fill="none"/><path d="M26 43.500L26.3 58.500" stroke="#A8802A" stroke-width=".9" fill="none"/><path d="M30 43.500L29.8 58.500" stroke="#A8802A" stroke-width=".9" fill="none"/><path d="M34 43.500L34.3 58.500" stroke="#A8802A" stroke-width=".9" fill="none"/><path d="M38 43.500L37.7 58.500" stroke="#A8802A" stroke-width=".9" fill="none"/><path d="M42 43.500L42.4 58.500" stroke="#A8802A" stroke-width=".9" fill="none"/><path d="M24 43.500L24.3 59" stroke="#F2DC9A" stroke-width=".7" fill="none"/><path d="M28 43.500L27.7 59" stroke="#F2DC9A" stroke-width=".7" fill="none"/><path d="M32 43.500L32.2 59" stroke="#F2DC9A" stroke-width=".7" fill="none"/><path d="M36 43.500L35.8 59" stroke="#F2DC9A" stroke-width=".7" fill="none"/><path d="M40 43.500L40.3 59" stroke="#F2DC9A" stroke-width=".7" fill="none"/></svg></span></h1>
@@ -329,10 +343,11 @@ body.light{background:var(--white);color:var(--navy)}
           <h1 id="h1" tabindex="-1">What <span>problem</span> are you teaching?</h1>
         </div>
       </div>
-      <label for="problem">Your problem or question</label>
+      <label for="problem" id="plabel">Your problem or question</label>
       <textarea id="problem" rows="4" aria-describedby="perr phelp"></textarea>
       <p id="phelp">It shows at the top of your whiteboard and in your video.</p>
       <p id="perr" class="err" role="alert"></p>
+      <div id="drules" hidden></div>
       <div class="row">
         <button type="button" id="next1" class="primary">Next</button>
       </div>
@@ -541,6 +556,27 @@ body.light{background:var(--white);color:var(--navy)}
           <button type="button" id="makeall" class="primary">Make links and instructions</button>
         </div>
         <div id="out" aria-live="polite"></div>
+        <div class="defense" role="group" aria-labelledby="defh">
+          <h2 id="defh">Assignment defense</h2>
+          <p>Ask one student a question about work they already turned in. The question stays hidden until the student presses Begin Defense, and recording starts at the same moment.</p>
+          <label for="dtitle">Assignment title</label>
+          <input type="text" id="dtitle" maxlength="80" autocomplete="off">
+          <label for="dref">Student reference for your own record (optional). Use initials or an ID. It is not put in the link.</label>
+          <input type="text" id="dref" maxlength="40" autocomplete="off">
+          <label for="dq">Defense question</label>
+          <textarea id="dq" rows="3"></textarea>
+          <label for="dlimit">Recording time</label>
+          <select id="dlimit"><option value="60">1 minute</option><option value="90" selected>90 seconds</option><option value="120">2 minutes</option><option value="180">3 minutes</option></select>
+          <label for="ddue">Due (optional)</label>
+          <input type="text" id="ddue" maxlength="60" placeholder="For example Friday at 11:59 pm" autocomplete="off">
+          <label for="dpts">Points (optional)</label>
+          <input type="text" id="dpts" maxlength="20" autocomplete="off">
+          <p class="ck"><input type="checkbox" id="dwb" checked><label for="dwb">Let the student use the whiteboard</label></p>
+          <div class="row"><button type="button" id="makedef" class="primary">Make defense link</button></div>
+          <p id="deferr" class="err" role="alert"></p>
+          <div id="defout" aria-live="polite"></div>
+          <p class="hint">Nothing you type in this section is saved in the browser, so copy what you need before you leave. The question is packed into the link so it cannot be read at a glance, but it is not locked on a server, and a student with technical skill could unpack it. The one-attempt rule is kept on the student's own device. Server storage and server-side limits come with the sign-in version.</p>
+        </div>
         <dialog id="bank" aria-labelledby="bankh">
           <div class="bhead">
             <h3 id="bankh">Question bank</h3>
@@ -698,6 +734,7 @@ body.light{background:var(--white);color:var(--navy)}
     cueTimer=setTimeout(reveal,1900);
   }
   $('next1').addEventListener('click',function(){
+    if(defense){go(media?3:2);say('');return}
     if(!$('problem').value.trim()){$('perr').textContent='Type your problem first.';$('problem').focus();return}
     $('perr').textContent='';layoutProblem();saveBoard();
     go(media?3:2);say('');
@@ -705,7 +742,7 @@ body.light{background:var(--white);color:var(--navy)}
   $('back2').addEventListener('click',function(){go(1)});
   $('next2').addEventListener('click',function(){
     go(3);
-    say('Press Record when you are ready.');
+    say(defense?'Press Begin Defense when you are ready.':'Press Record when you are ready.');
   });
   $('back3').addEventListener('click',function(){go(1);say('')});
 
@@ -822,7 +859,7 @@ body.light{background:var(--white);color:var(--navy)}
   var SIDE=300,SW=W+SIDE,penSeen=false,SHAPES=['line','arrow','rect','oval'];
   function pos(e){var r=stage.getBoundingClientRect();return{x:view.x+(e.clientX-r.left)*SW/r.width/view.z,y:view.y+(e.clientY-r.top)*H/r.height/view.z}}
   stage.addEventListener('pointerdown',function(e){
-    if(e.button)return;
+    if(e.button||(defense&&!defense.wb))return;
     var br=stage.getBoundingClientRect();if((e.clientX-br.left)*SW/br.width>W)return;
     /* once a stylus is used, ignore finger and palm touches so a resting hand does not draw */
     if(e.pointerType==='pen')penSeen=true;
@@ -830,7 +867,7 @@ body.light{background:var(--white);color:var(--navy)}
     if(live||pan)return;
     if(state==='idle'){
       var wn=$('warn');wn.classList.remove('nudge');void wn.offsetWidth;wn.classList.add('nudge');
-      if(!warned){warned=true;say('You are not recording yet. Press Record before you start teaching.')}
+      if(!warned){warned=true;say(defense?'This is practice. Your question appears when you press Begin Defense.':'You are not recording yet. Press Record before you start teaching.')}
     }
     stage.setPointerCapture(e.pointerId);
     if(tool==='move'){
@@ -923,6 +960,7 @@ body.light{background:var(--white);color:var(--navy)}
     if(e.inputType==='insertFromPaste'||e.inputType==='insertFromDrop'||e.inputType==='insertFromYank'){e.preventDefault();say('Pasting is turned off here. Type your text.')}
   });
   stage.addEventListener('keydown',function(e){
+    if(defense&&!defense.wb)return;
     if(tool==='move'){
       var items=strokes.filter(function(x){return x.tool!=='eraser'}),k=e.key,step=e.shiftKey?2:12;
       if(k==='Enter'||k===' '){
@@ -967,13 +1005,50 @@ body.light{background:var(--white);color:var(--navy)}
   }
   /* what the instructor's link carries: problem, rubric, time limit, course name.
      New links pack it into one short value (z). Older plain links and the demo link still work. */
-  var fromLink='',rubric=[],demoMode=false;
+  var fromLink='',rubric=[],demoMode=false,defense=null;
   function rubCount(){
     var n=rubric.filter(function(r){return r.on}).length;
     $('rubcount').textContent=n+' of '+rubric.length+' covered';
   }
+  function limitWords(sec){return sec<120?sec+' seconds':(sec/60)+' minutes'}
+  function stamp(t){var d=new Date(t);return d.toLocaleDateString()+' '+d.toLocaleTimeString()+' and '+d.getMilliseconds()+' ms'}
+  function setupDefense(){
+    document.body.classList.add('defense-mode');
+    if(!defense.wb)document.body.classList.add('nowb');
+    CUES[1]='Assignment defense';CUES[3]=defense.wb?'Check the whiteboard, then begin':'Begin when you are ready';
+    $('h1').textContent='';$('h1').appendChild(document.createTextNode('Assignment '));var sp=document.createElement('span');sp.textContent='defense';$('h1').appendChild(sp);
+    $('plabel').hidden=true;$('problem').hidden=true;$('phelp').hidden=true;
+    var box=$('drules');box.hidden=false;box.textContent='';
+    var facts=document.createElement('ul');facts.className='dfacts';
+    [['Assignment',defense.title],['Due',defense.due],['Recording time',limitWords(Number($('limit').value))]].forEach(function(r){
+      if(!r[1])return;var li=document.createElement('li'),b=document.createElement('strong');b.textContent=r[0]+': ';li.appendChild(b);li.appendChild(document.createTextNode(r[1]));facts.appendChild(li);
+    });
+    box.appendChild(facts);
+    var h=document.createElement('h2');h.textContent='How this works';box.appendChild(h);
+    var ul=document.createElement('ul');
+    ['Your question appears when you press Begin Defense. Recording starts at the same moment.',
+     'There is no preparation time after the question appears.',
+     'You get one attempt. You cannot pause, restart, or record again.',
+     'Recording stops on its own when time runs out. You can press Finish if you are done sooner.',
+     defense.wb?'You can practice on the whiteboard before you begin. The board is cleared when your question appears.':'The whiteboard is turned off for this defense. You answer out loud on camera.',
+     'To prepare, study your original assignment and be ready to explain any answer.',
+     'You do not have to repeat your written answer word for word. A correct explanation that fixes an earlier mistake can still earn credit.',
+     'If you have an approved accommodation or a technical problem, contact your instructor before you begin.'
+    ].forEach(function(t){var li=document.createElement('li');li.textContent=t;ul.appendChild(li)});
+    box.appendChild(ul);
+    $('pause').hidden=true;$('back3').hidden=true;$('again').hidden=true;$('fresh').hidden=true;
+    $('limit').disabled=true;$('record').textContent='Begin Defense';
+    $('warn').textContent=defense.wb?'You are not recording yet. Practice on the whiteboard if you like. Your question appears, and recording starts, when you press Begin Defense.':'You are not recording yet. Your question appears, and recording starts, when you press Begin Defense.';
+    try{var u=localStorage.getItem('chalkcast-defense-'+defense.id);if(u)defense.used=Number(u)}catch(e){}
+  }
+  function usedGate(){
+    gate('This defense was already started',['It was started on this device on '+new Date(defense.used).toLocaleString()+'.','You get one attempt.','If something went wrong, contact your instructor.'],[['Close',closeGate,true]]);
+  }
   function applyLink(d){
-    if(d.p){
+    if(d.d){
+      defense={q:String(d.p||''),title:String(d.t||'Assignment defense').slice(0,80),due:String(d.u||'').slice(0,60),wb:d.w!==0,id:String(d.i||'x').replace(/[^a-z0-9]/gi,'').slice(0,24),events:[],used:0};
+      fromLink='defense:'+defense.id;
+    }else if(d.p){
       fromLink=String(d.p);
       $('problem').value=fromLink;$('problem').readOnly=true;
       $('phelp').textContent='Your instructor set this problem. It shows at the top of your whiteboard and in your video.';
@@ -1000,6 +1075,7 @@ body.light{background:var(--white);color:var(--navy)}
       rubCount();
     }
     if(d.c){$('course').textContent='for '+String(d.c).slice(0,40);$('course').hidden=false}
+    if(defense)setupDefense();
     layoutProblem();
   }
   function b64url(bytes){var t='';for(var i=0;i<bytes.length;i++)t+=String.fromCharCode(bytes[i]);return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
@@ -1016,6 +1092,7 @@ body.light{background:var(--white);color:var(--navy)}
     var ds=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
     return new Response(ds).text().then(function(x){return JSON.parse(x)});
   }
+  try{if(Math.min(screen.width,screen.height)<600)$('smallnote').hidden=false}catch(e){}
   var qs=new URLSearchParams(location.search),linkError=false,linkReady;
   if(qs.has('demo')){
     demoMode=true;
@@ -1048,7 +1125,7 @@ body.light{background:var(--white);color:var(--navy)}
     }
     if(barH){
       c.save();c.textBaseline='top';
-      c.fillStyle='#8B3A2E';c.font='700 15px "DM Sans",Arial,sans-serif';c.fillText('PROBLEM',24,16);
+      c.fillStyle='#8B3A2E';c.font='700 15px "DM Sans",Arial,sans-serif';c.fillText(defense?'QUESTION':'PROBLEM',24,16);
       c.fillStyle='#060B1A';c.font=PFONT;
       for(var i=0;i<probLines.length;i++)c.fillText(probLines[i],24,42+i*34);
       c.fillRect(0,barH,W,2);
@@ -1160,13 +1237,13 @@ body.light{background:var(--white);color:var(--navy)}
   function fmt(s){s=Math.floor(s);return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
   function setState(s){
     state=s;
-    $('record').disabled=s!=='idle';
+    $('record').disabled=s!=='idle'||!!(defense&&defense.used);
     $('pause').disabled=s==='idle'||s==='count';
     $('stop').disabled=s==='idle'||s==='count';
-    $('limit').disabled=limitLocked||s!=='idle';
+    $('limit').disabled=limitLocked||!!defense||s!=='idle';
     $('back3').disabled=s!=='idle';
     $('pause').textContent=s==='paused'?'Resume':'Pause';
-    $('record').textContent=s==='rec'?'Recording':s==='paused'?'Paused':'Record';
+    $('record').textContent=s==='rec'?'Recording':s==='paused'?'Paused':defense?'Begin Defense':'Record';
     $('record').classList.toggle('live',s==='rec');
     $('pill').className='pill'+(s==='rec'?' rec':'');
     $('pilltext').textContent=s==='rec'?'Recording':s==='paused'?'Paused':'Not recording';
@@ -1175,6 +1252,19 @@ body.light{background:var(--white);color:var(--navy)}
   $('record').addEventListener('click',function(){
     if(!window.MediaRecorder||!stage.captureStream){say('This browser cannot record here. Try Chrome, Edge or Safari on a computer.');return}
     if(!media){go(2);say('Turn on your camera and microphone first.');return}
+    if(defense){
+      if(defense.used){say('This defense was already started on this device. Contact your instructor.');return}
+      /* clear any practice drawing, then start the recorder and show the question in the same step */
+      dropSel();strokes=[];redraw();bgImg=null;bgBlob=null;$('nopic').hidden=true;textRow=0;
+      pages=[{ink:ink,ictx:ictx,strokes:strokes,bg:null,bgBlob:null}];pi=0;updatePager();setZoom(1);
+      startRecording();
+      if(state!=='rec')return;
+      $('problem').value=defense.q;layoutProblem();
+      defense.revealAt=defense.recAt=Date.now();defense.used=defense.revealAt;
+      try{localStorage.setItem('chalkcast-defense-'+defense.id,String(defense.revealAt))}catch(e){}
+      saveBoard();say('Your question is showing and recording has started.');
+      return;
+    }
     var n=3,box=$('count');
     setState('count');box.hidden=false;
     function tick(){
@@ -1206,7 +1296,14 @@ body.light{background:var(--white);color:var(--navy)}
     setState('rec');
     say('Recording started.');
   }
+  ['visibilitychange','blur','focus'].forEach(function(ev){
+    (ev==='visibilitychange'?document:window).addEventListener(ev,function(){
+      if(!defense||state!=='rec')return;
+      defense.events.push([Date.now(),ev==='visibilitychange'?(document.hidden?'Page was hidden':'Page was shown again'):ev==='blur'?'Window lost focus':'Window was in focus again']);
+    });
+  });
   $('pause').addEventListener('click',function(){
+    if(defense)return;
     if(state==='rec'){rec.pause();base=elapsed;setState('paused');say('Recording paused.')}
     else if(state==='paused'){rec.resume();startT=Date.now();setState('rec');say('Recording again.')}
   });
@@ -1219,6 +1316,7 @@ body.light{background:var(--white);color:var(--navy)}
     if(elapsed>=Number($('limit').value))stopRec();
   },250);
   function finish(){
+    if(defense&&!defense.endAt)defense.endAt=Date.now();
     if(recMeta){recMeta.elapsed=elapsed;recMeta.done=true;kvPut('rec',recMeta)}
     showResult(chunks,rec.mimeType||'video/webm');
     say('Recording finished. Your video is ready.');
@@ -1289,6 +1387,33 @@ body.light{background:var(--white);color:var(--navy)}
       var rb=atob(t.toDataURL('image/jpeg',.9).split(',')[1]),ra=new Uint8Array(rb.length);
       for(var q=0;q<rb.length;q++)ra[q]=rb.charCodeAt(q);
       jpegs.push(ra);
+    }
+    if(defense){
+      tc.setTransform(1,0,0,1,0,0);tc.fillStyle='#fff';tc.fillRect(0,0,W,H);tc.textBaseline='top';
+      tc.fillStyle='#8B3A2E';tc.font='700 15px "DM Sans",Arial,sans-serif';tc.fillText('ASSIGNMENT DEFENSE',40,30);
+      tc.fillStyle='#060B1A';tc.font='600 30px "Plus Jakarta Sans",Arial,sans-serif';tc.fillText('Defense record',40,54);
+      tc.font='400 20px "DM Sans",Arial,sans-serif';
+      var dy=110,rows=[['Assignment',defense.title],['Question',defense.q],
+        ['Question shown',defense.revealAt?stamp(defense.revealAt):'Not recorded. The page was closed and the recording was recovered.'],
+        ['Recording started',defense.recAt?stamp(defense.recAt):'Not recorded'],
+        ['Recording ended',defense.endAt?stamp(defense.endAt):'Not recorded'],
+        ['Length',fmt(elapsed)+' of '+fmt(Number($('limit').value))+' allowed'],
+        ['Time zone',(window.Intl&&Intl.DateTimeFormat().resolvedOptions().timeZone)||'Not available'],
+        ['Whiteboard',defense.wb?'On':'Off'],
+        ['Page focus changes',defense.events.length?String(defense.events.length):'None recorded']];
+      rows.forEach(function(r){
+        tc.font='700 20px "DM Sans",Arial,sans-serif';tc.fillText(r[0],40,dy);
+        tc.font='400 20px "DM Sans",Arial,sans-serif';
+        wrapText(tc,String(r[1]).replace(/\n+/g,' / '),W-330).forEach(function(l){tc.fillText(l,290,dy);dy+=27});
+        dy+=8;
+      });
+      defense.events.slice(0,10).forEach(function(ev){tc.fillText(stamp(ev[0])+': '+ev[1],290,dy);dy+=27});
+      if(defense.events.length>10){tc.fillText('and '+(defense.events.length-10)+' more',290,dy);dy+=27}
+      dy+=10;tc.fillStyle='#4A5060';
+      wrapText(tc,'Focus changes are technical events, such as switching windows or a notification taking focus. They are not proof of misconduct. This tool cannot detect a second device.',W-80).forEach(function(l){tc.fillText(l,40,dy);dy+=27});
+      var db_=atob(t.toDataURL('image/jpeg',.9).split(',')[1]),da=new Uint8Array(db_.length);
+      for(var q2=0;q2<db_.length;q2++)da[q2]=db_.charCodeAt(q2);
+      jpegs.push(da);
     }
     var a=document.createElement('a'),u=URL.createObjectURL(buildPdf(jpegs,W,H));
     a.href=u;a.download=$('dl').getAttribute('download').replace(/\.[a-z0-9]+$/,'')+'-board.pdf';
@@ -1435,6 +1560,31 @@ body.light{background:var(--white);color:var(--navy)}
       bankType=b.getAttribute('data-bt');
       [].forEach.call(document.querySelectorAll('#bank [data-bt]'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
       if(window.CHALKCAST_BANK)showBankItems();
+    });
+  });
+  $('makedef').addEventListener('click',function(){
+    var title=$('dtitle').value.trim(),q=$('dq').value.trim(),err=$('deferr'),box=$('defout');
+    err.textContent='';box.textContent='';
+    if(!title){err.textContent='Type the assignment title.';$('dtitle').focus();return}
+    if(!q){err.textContent='Type the defense question.';$('dq').focus();return}
+    var sec=Number($('dlimit').value),wb=$('dwb').checked,due=$('ddue').value.trim(),pts=$('dpts').value.trim(),ref=$('dref').value.trim(),course=$('coursename').value.trim();
+    var id=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+    var d={d:1,p:q,l:sec,t:title,i:id,w:wb?1:0};if(due)d.u=due;if(course)d.c=course;
+    pack(d).then(function(z){
+      if(!z){err.textContent='This browser cannot make a defense link. Use a current version of Chrome, Edge, or Safari.';return}
+      var link=location.href.split('#')[0].split('?')[0]+'?z='+z,made=new Date();
+      var msg='Oral defense required: '+title+'\n\nAn oral defense is a required part of your grade for this assignment.'+(pts?' It is worth '+pts+' points.':'')+'\n'+(due?'Due: '+due+'\n':'')+'Recording time: '+limitWords(sec)+'\n\nWhat to expect\n- Open the link on a computer with a camera and a microphone, in Chrome, Edge, or Safari.\n- You will check your camera'+(wb?', microphone, and whiteboard':' and microphone')+' first.\n- Your question appears when you press Begin Defense, and recording starts at the same moment.\n- You get one attempt, with no pausing or restarting.\n- Recording stops when time runs out. Then download your video and your PDF, and upload both to this assignment.\n\nHow to prepare\n- Study your original assignment and be ready to explain any answer.\n- You do not have to repeat your written answer word for word.\n\nYou will be assessed on\n- Accuracy of your explanation\n- Understanding of the underlying concepts\n- Ability to defend your original answer\n- Application of course concepts\n\nIf you have an approved accommodation or a technical problem, contact me before you begin.\n\nLink: '+link;
+      var recd='Instructor interaction record\nCreated: '+made.toLocaleString()+'\nAssignment: '+title+'\nStudent reference: '+(ref||'not entered')+'\nDefense question: '+q+'\nRecording time: '+limitWords(sec)+'\nWhiteboard: '+(wb?'on':'off')+(pts?'\nPoints: '+pts:'')+(due?'\nDue: '+due:'')+'\nLink id: '+id+'\n\nKeep this with the student\'s original submission, the recorded defense, and your feedback. It supports a review of instructor-initiated interaction. It does not by itself establish RSI compliance.';
+      function block(head,text,btn,done){
+        box.appendChild(el('h3',{},head));box.appendChild(el('pre',{},text));
+        var b=el('button',{type:'button'},btn);b.addEventListener('click',function(){copyRich('',text,function(){say(done)})});box.appendChild(b);
+      }
+      box.appendChild(el('h3',{},'Defense link'));
+      var inp=el('input',{type:'text',readonly:'',id:'deflink','aria-label':'Defense link'});inp.value=link;box.appendChild(inp);
+      var cb=el('button',{type:'button'},'Copy link');cb.addEventListener('click',function(){copyRich('',link,function(){say('Link copied.')})});box.appendChild(cb);
+      block('Message to send the student (the question is not in it)',msg,'Copy message','Message copied.');
+      block('Your record of this interaction',recd,'Copy record','Record copied.');
+      say('Defense link made. Copy the link, the message, and your record.');
     });
   });
   drawWeeks();
@@ -1603,11 +1753,25 @@ body.light{background:var(--white);color:var(--navy)}
   });
   if(!setupMode&&!blocked.length){
     linkReady.then(openDb).then(function(ok){
-      if(!ok)return;
+      if(!ok){if(defense&&defense.used&&cur===0)usedGate();return}
       Promise.all([dbRead('kv','board'),dbRead('kv','rec'),dbRead('chunks')]).then(function(v){
         var b=v[0],r=v[1],parts=v[2]||[],now=Date.now();
         var hasBoard=b&&b.pages&&b.pages.some(function(pg){return(pg.strokes&&pg.strokes.length)||pg.bg});
         var hasRec=r&&parts.length>0;
+        if(defense){
+          var mine=b&&(b.link||'')===fromLink&&defense.used;
+          if(mine&&hasRec&&cur===0){
+            gate('Your defense recording was saved',['A recording, about '+fmt(r.elapsed||0)+' long'+(r.done?'':' (it stopped when the page closed)'),'It was saved on this device only.','You cannot record again. Download it, turn it in, and tell your instructor what happened.'],[
+              ['Get my recording back',function(){
+                closeGate();$('problem').value=defense.q;layoutProblem();restoreBoard(b);
+                recMeta=r;chunks=parts;elapsed=r.elapsed||0;showResult(parts,r.type||'video/webm');say('Your recording is back. Watch it, then download it.');
+              },true]]);
+            return;
+          }
+          if(b||r||parts.length)clearSaved();
+          if(defense.used&&cur===0)usedGate();
+          return;
+        }
         var newest=Math.max(b?b.at:0,r?r.at:0);
         if(!hasBoard&&!hasRec){if(b||r||parts.length)clearSaved();return}
         if(now-newest>SAVE_MS||(b&&(b.link||'')!==(fromLink||''))){clearSaved();return}
