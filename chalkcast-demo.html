@@ -7,7 +7,7 @@
 <meta name="description" content="Watch a sample chalkcast recording, then record your own one-minute demo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -24,11 +24,11 @@ a:focus-visible,button:focus-visible,video:focus-visible{outline:3px solid #C9A1
 .hero .wrap{position:relative}
 .cc-word{display:block;height:52px;width:auto;margin:0 0 26px -4px}
 .hero .eyebrow{color:#D9B45A}
-.hero h1{font-size:clamp(30px,4.4vw,52px);line-height:1.1;font-weight:800;color:#FFFFFF;max-width:16em}
+.hero h1{font-size:clamp(30px,4.4vw,52px);line-height:1.1;font-weight:500;color:#FFFFFF;max-width:16em}
 .hero h1 span{color:#C2734D}
 .lede{font-size:19px;color:#DCE0E8;margin-top:18px;max-width:38em}
 .step{display:flex;align-items:baseline;gap:16px;margin:44px 0 16px}
-.num{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-size:44px;font-weight:800;line-height:1;color:#C2734D}
+.num{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-size:44px;font-weight:500;line-height:1;color:#C2734D}
 .step h2{font-size:26px;font-weight:700;color:#FFFFFF}
 video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;border-radius:6px;border:1px solid rgba(255,255,255,0.25);box-shadow:0 18px 50px rgba(0,0,0,0.45)}
 .cap{font-size:15px;color:#DCE0E8;margin-top:12px}
@@ -38,6 +38,10 @@ video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;bor
 .look strong{display:block;color:#FFFFFF;font-family:"Plus Jakarta Sans",Arial,sans-serif;font-size:17px;margin-bottom:4px}
 .btn{display:inline-block;background:#D9B45A;color:#060B1A;border-radius:4px;padding:18px 34px;font-size:13px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;line-height:1.2;text-decoration:none;transition:transform 200ms ease,background 200ms ease}
 .btn:hover{background:#E6C675;transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:#FFFFFF;border:1px solid rgba(255,255,255,0.6)}
+.btn.ghost:hover{background:rgba(255,255,255,0.1)}
+.toprow{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.thanks .hero h1{max-width:14em}
 .btn.red{background:#8B3A2E;color:#FFFFFF}
 .btn.red:hover{background:#6F2C22}
 .try{background:#FFFFFF;padding:72px 0}
@@ -50,7 +54,7 @@ video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;bor
 .list li:before{content:"";position:absolute;left:0;top:0.72em;width:14px;height:2px;background:#8B3A2E}
 .band{background:#060B1A;color:#FFFFFF;padding:72px 0;text-align:center}
 .band .eyebrow{color:#D9B45A}
-.band h2{font-size:clamp(28px,3.6vw,44px);font-weight:800;line-height:1.12}
+.band h2{font-size:clamp(28px,3.6vw,44px);font-weight:500;line-height:1.12}
 .band h2 span{color:#C2734D}
 .band p{color:#DCE0E8;max-width:36em;margin:18px auto 30px;font-size:18px}
 footer{padding:26px 0 36px;font-size:14px;color:#3A4256}
@@ -88,11 +92,12 @@ footer{padding:26px 0 36px;font-size:14px;color:#3A4256}
 
 <section class="hero" aria-labelledby="h1">
   <div class="wrap">
-    <p class="eyebrow">The demo</p>
+    <p class="eyebrow" id="d-eye">The demo</p>
     <h1 id="h1">Watch a student <span>teach it</span>. Then try it yourself.</h1>
-    <p class="lede">This is what a chalkcast assignment looks like from the student's seat. The sample is 40 seconds long.</p>
+    <p class="lede" id="d-lede">This is what a chalkcast assignment looks like from the student's seat. The sample is 40 seconds long.</p>
+    <div class="toprow"><a class="btn" href="teaching-studio.html?demo" target="_blank" rel="noopener">Open the demo</a><a class="btn ghost" href="#sample">Watch a sample first</a></div>
 
-    <div class="step"><span class="num" aria-hidden="true">01</span><h2>Watch a sample recording</h2></div>
+    <div class="step" id="sample"><span class="num" aria-hidden="true">01</span><h2>Watch a sample recording</h2></div>
     <video controls playsinline preload="metadata" poster="chalkcast-sample-poster.jpg" aria-describedby="vcap">
       <source src="chalkcast-sample-recording.mp4" type="video/mp4">
       <track kind="captions" src="chalkcast-sample-recording.vtt" srclang="en" label="English" default>
@@ -137,6 +142,15 @@ footer{padding:26px 0 36px;font-size:14px;color:#3A4256}
 </div>
 <p class="copy">&copy; 2026 MedMasters Collaborative, LLC. All rights reserved.</p></footer>
 <script src="chalkcast-site.js"></script>
+<script>
+/* When someone arrives from the demo form, greet them with a thank-you. */
+(function(){function thanks(){if(location.hash!=='#thanks')return;document.body.classList.add('thanks');
+document.getElementById('d-eye').textContent='Thank you';
+document.getElementById('h1').innerHTML='You are in. Your demo is <span>ready</span>.';
+document.getElementById('d-lede').textContent='Open the demo to record your own one-minute teach-back, or watch a 40-second sample first.';
+document.title='Thank you. Your chalkcast demo is ready.';}
+thanks();window.addEventListener('hashchange',thanks);})();
+</script>
 
 <script>
 (function(){function send(){try{window.parent.postMessage({id:'chalkcast-demo',type:'height',height:document.documentElement.scrollHeight},'*')}catch(e){}}
