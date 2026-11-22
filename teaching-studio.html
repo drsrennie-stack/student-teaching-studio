@@ -201,6 +201,8 @@ html.standalone #s5{justify-content:flex-start}
 .defense .hint{font-size:14px;color:#4A5060;margin:10px 0 0}
 .defense pre{white-space:pre-wrap;font:inherit;font-size:15px;line-height:1.45;background:#F4F5F7;color:#070A15;border-radius:10px;padding:14px 16px;margin:8px 0 10px}
 .defense .ck{margin:12px 0 0}.defense .ck input{width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0}
+.bulk{border-top:1px solid var(--line);margin-top:26px;padding-top:20px}#bulkh{margin:0 0 6px}#bulkout h3{margin:22px 0 0}#bulkout .row{margin:0 0 6px}.bulk .tw{overflow-x:auto}.bulk table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}.bulk caption{text-align:left;font-weight:600;padding:0 0 8px}.bulk th,.bulk td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}.bulk td input{width:100%;min-width:150px}
+body.defense-mode canvas{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .defense label{display:block;margin:14px 0 6px}.defense .ck label{display:inline;margin:0}.defense select{display:block}
 #drules ul{margin:8px 0 0;padding-left:22px}#drules li{margin:0 0 6px}
 #drules .dfacts{list-style:none;padding:0;margin:0 0 6px}
@@ -575,6 +577,17 @@ body.light{background:var(--white);color:var(--navy)}
           <div class="row"><button type="button" id="makedef" class="primary">Make defense link</button></div>
           <p id="deferr" class="err" role="alert"></p>
           <div id="defout" aria-live="polite"></div>
+          <div class="bulk" role="group" aria-labelledby="bulkh">
+            <h3 id="bulkh">Many defense links at once</h3>
+            <p>Each line becomes its own link with its own one-attempt record. The links use the title, recording time, due date, points, and whiteboard choice above.</p>
+            <label for="bq">Questions, one per line. To track who gets which link, put a reference first (initials or an ID), then a | mark, then the question. You can also paste two columns from a spreadsheet.</label>
+            <textarea id="bq" rows="6"></textarea>
+            <label for="bfile">Or choose a file of questions (.csv or .txt)</label>
+            <input type="file" id="bfile" accept=".csv,.txt,text/csv,text/plain">
+            <div class="row"><button type="button" id="makebulk" class="primary">Make all links</button></div>
+            <p id="bulkerr" class="err" role="alert"></p>
+            <div id="bulkout"></div>
+          </div>
           <p class="hint">Nothing you type in this section is saved in the browser, so copy what you need before you leave. The question is packed into the link so it cannot be read at a glance, but it is not locked on a server, and a student with technical skill could unpack it. The one-attempt rule is kept on the student's own device. Server storage and server-side limits come with the sign-in version.</p>
         </div>
         <dialog id="bank" aria-labelledby="bankh">
@@ -1302,6 +1315,14 @@ body.light{background:var(--white);color:var(--navy)}
       defense.events.push([Date.now(),ev==='visibilitychange'?(document.hidden?'Page was hidden':'Page was shown again'):ev==='blur'?'Window lost focus':'Window was in focus again']);
     });
   });
+  /* in a defense, the question cannot be copied, dragged out, or saved from the right-click menu */
+  ['copy','cut','contextmenu','dragstart'].forEach(function(ev){
+    document.addEventListener(ev,function(e){
+      if(!defense)return;
+      e.preventDefault();
+      if(state==='rec')defense.events.push([Date.now(),ev==='contextmenu'?'Right-click menu was blocked':ev==='dragstart'?'Drag was blocked':'Copy was blocked']);
+    });
+  });
   $('pause').addEventListener('click',function(){
     if(defense)return;
     if(state==='rec'){rec.pause();base=elapsed;setState('paused');say('Recording paused.')}
@@ -1400,7 +1421,7 @@ body.light{background:var(--white);color:var(--navy)}
         ['Length',fmt(elapsed)+' of '+fmt(Number($('limit').value))+' allowed'],
         ['Time zone',(window.Intl&&Intl.DateTimeFormat().resolvedOptions().timeZone)||'Not available'],
         ['Whiteboard',defense.wb?'On':'Off'],
-        ['Page focus changes',defense.events.length?String(defense.events.length):'None recorded']];
+        ['Page and copy events',defense.events.length?String(defense.events.length):'None recorded']];
       rows.forEach(function(r){
         tc.font='700 20px "DM Sans",Arial,sans-serif';tc.fillText(r[0],40,dy);
         tc.font='400 20px "DM Sans",Arial,sans-serif';
@@ -1562,6 +1583,7 @@ body.light{background:var(--white);color:var(--navy)}
       if(window.CHALKCAST_BANK)showBankItems();
     });
   });
+  function defMsg(title,pts,due,sec,wb){return 'Oral defense required: '+title+'\n\nAn oral defense is a required part of your grade for this assignment.'+(pts?' It is worth '+pts+' points.':'')+'\n'+(due?'Due: '+due+'\n':'')+'Recording time: '+limitWords(sec)+'\n\nWhat to expect\n- Open the link on a computer with a camera and a microphone, in Chrome, Edge, or Safari.\n- You will check your camera'+(wb?', microphone, and whiteboard':' and microphone')+' first.\n- Your question appears when you press Begin Defense, and recording starts at the same moment.\n- You get one attempt, with no pausing or restarting.\n- Recording stops when time runs out. Then download your video and your PDF, and upload both to this assignment.\n\nHow to prepare\n- Study your original assignment and be ready to explain any answer.\n- You do not have to repeat your written answer word for word.\n\nYou will be assessed on\n- Accuracy of your explanation\n- Understanding of the underlying concepts\n- Ability to defend your original answer\n- Application of course concepts\n\nIf you have an approved accommodation or a technical problem, contact me before you begin.\n\nLink: '}
   $('makedef').addEventListener('click',function(){
     var title=$('dtitle').value.trim(),q=$('dq').value.trim(),err=$('deferr'),box=$('defout');
     err.textContent='';box.textContent='';
@@ -1573,7 +1595,7 @@ body.light{background:var(--white);color:var(--navy)}
     pack(d).then(function(z){
       if(!z){err.textContent='This browser cannot make a defense link. Use a current version of Chrome, Edge, or Safari.';return}
       var link=location.href.split('#')[0].split('?')[0]+'?z='+z,made=new Date();
-      var msg='Oral defense required: '+title+'\n\nAn oral defense is a required part of your grade for this assignment.'+(pts?' It is worth '+pts+' points.':'')+'\n'+(due?'Due: '+due+'\n':'')+'Recording time: '+limitWords(sec)+'\n\nWhat to expect\n- Open the link on a computer with a camera and a microphone, in Chrome, Edge, or Safari.\n- You will check your camera'+(wb?', microphone, and whiteboard':' and microphone')+' first.\n- Your question appears when you press Begin Defense, and recording starts at the same moment.\n- You get one attempt, with no pausing or restarting.\n- Recording stops when time runs out. Then download your video and your PDF, and upload both to this assignment.\n\nHow to prepare\n- Study your original assignment and be ready to explain any answer.\n- You do not have to repeat your written answer word for word.\n\nYou will be assessed on\n- Accuracy of your explanation\n- Understanding of the underlying concepts\n- Ability to defend your original answer\n- Application of course concepts\n\nIf you have an approved accommodation or a technical problem, contact me before you begin.\n\nLink: '+link;
+      var msg=defMsg(title,pts,due,sec,wb)+link;
       var recd='Instructor interaction record\nCreated: '+made.toLocaleString()+'\nAssignment: '+title+'\nStudent reference: '+(ref||'not entered')+'\nDefense question: '+q+'\nRecording time: '+limitWords(sec)+'\nWhiteboard: '+(wb?'on':'off')+(pts?'\nPoints: '+pts:'')+(due?'\nDue: '+due:'')+'\nLink id: '+id+'\n\nKeep this with the student\'s original submission, the recorded defense, and your feedback. It supports a review of instructor-initiated interaction. It does not by itself establish RSI compliance.';
       function block(head,text,btn,done){
         box.appendChild(el('h3',{},head));box.appendChild(el('pre',{},text));
@@ -1585,6 +1607,97 @@ body.light{background:var(--white);color:var(--navy)}
       block('Message to send the student (the question is not in it)',msg,'Copy message','Message copied.');
       block('Your record of this interaction',recd,'Copy record','Record copied.');
       say('Defense link made. Copy the link, the message, and your record.');
+    });
+  });
+  function parseCSV(t){
+    var rows=[],row=[],cell='',q=false;
+    for(var i=0;i<t.length;i++){
+      var ch=t[i];
+      if(q){if(ch==='"'){if(t[i+1]==='"'){cell+='"';i++}else q=false}else cell+=ch}
+      else if(ch==='"')q=true;
+      else if(ch===','){row.push(cell);cell=''}
+      else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell=''}
+      else cell+=ch;
+    }
+    row.push(cell);rows.push(row);return rows;
+  }
+  function tidy(x){return String(x||'').replace(/\s+/g,' ').trim()}
+  $('bfile').addEventListener('change',function(){
+    var f=this.files&&this.files[0],err=$('bulkerr');err.textContent='';
+    if(!f)return;
+    if(f.size>1000000){err.textContent='That file is too large. Use a file under 1 MB.';return}
+    var r=new FileReader();
+    r.onload=function(){
+      var text=String(r.result).replace(/^﻿/,''),lines=[];
+      if(/\.csv$/i.test(f.name)){
+        parseCSV(text).forEach(function(cells,n){
+          cells=cells.map(tidy).filter(Boolean);
+          if(!cells.length)return;
+          if(n===0&&/^(defense )?questions?$/i.test(cells[cells.length>1?1:0]))return;
+          lines.push(cells.length>1?cells[0]+' | '+cells[1]:cells[0]);
+        });
+      }else lines=text.split(/\r?\n/).map(function(l){return l.trim()}).filter(Boolean);
+      $('bq').value=lines.join('\n');
+      say(lines.length+' questions loaded from the file. Check them, then press Make all links.');
+    };
+    r.onerror=function(){err.textContent='That file could not be read.'};
+    r.readAsText(f);
+  });
+  $('makebulk').addEventListener('click',function(){
+    var title=$('dtitle').value.trim(),err=$('bulkerr'),box=$('bulkout');
+    err.textContent='';box.textContent='';
+    if(!title){err.textContent='Type the assignment title above first.';$('dtitle').focus();return}
+    var items=[];
+    $('bq').value.split(/\r?\n/).forEach(function(l){
+      if(!l.trim())return;
+      var ref='',q=l,m;
+      if(l.indexOf('\t')>-1){ref=l.slice(0,l.indexOf('\t'));q=l.slice(l.indexOf('\t')+1)}
+      else if((m=/^([^|]{1,40})\|(.+)$/.exec(l))){ref=m[1];q=m[2]}
+      ref=tidy(ref).slice(0,40);q=tidy(q);
+      if(q)items.push({ref:ref,q:q});
+    });
+    if(!items.length){err.textContent='Type or paste at least one question.';$('bq').focus();return}
+    if(items.length>200){err.textContent='That is '+items.length+' questions. Make 200 or fewer at a time.';return}
+    var sec=Number($('dlimit').value),wb=$('dwb').checked,due=$('ddue').value.trim(),pts=$('dpts').value.trim(),course=$('coursename').value.trim();
+    var base=location.href.split('#')[0].split('?')[0],made=new Date();
+    Promise.all(items.map(function(it,n){
+      it.id=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4)+n.toString(36);
+      var d={d:1,p:it.q,l:sec,t:title,i:it.id,w:wb?1:0};if(due)d.u=due;if(course)d.c=course;
+      return pack(d).then(function(z){it.link=z?base+'?z='+z:''});
+    })).then(function(){
+      if(!items[0].link){err.textContent='This browser cannot make defense links. Use a current version of Chrome, Edge, or Safari.';return}
+      var wrap=el('div',{class:'tw'}),tb=el('table',{}),hr=el('tr',{});
+      tb.appendChild(el('caption',{},items.length+(items.length===1?' defense link':' defense links')+' for '+title));
+      ['Row','Reference','Question','Link','Copy'].forEach(function(h){hr.appendChild(el('th',{scope:'col'},h))});
+      var th=el('thead',{});th.appendChild(hr);tb.appendChild(th);
+      var body=el('tbody',{});
+      items.forEach(function(it,n){
+        var tr=el('tr',{}),td=el('td',{}),inp=el('input',{type:'text',readonly:'','aria-label':'Link for row '+(n+1)});
+        inp.value=it.link;td.appendChild(inp);
+        var tc=el('td',{}),b=el('button',{type:'button','aria-label':'Copy link for row '+(n+1)},'Copy');
+        b.addEventListener('click',function(){copyRich('',it.link,function(){say('Link for row '+(n+1)+' copied.')})});tc.appendChild(b);
+        tr.appendChild(el('th',{scope:'row'},String(n+1)));tr.appendChild(el('td',{},it.ref));tr.appendChild(el('td',{},it.q));tr.appendChild(td);tr.appendChild(tc);
+        body.appendChild(tr);
+      });
+      tb.appendChild(body);wrap.appendChild(tb);box.appendChild(wrap);
+      var tsv='Reference\tQuestion\tLink\n'+items.map(function(it){return it.ref+'\t'+it.q+'\t'+it.link}).join('\n');
+      function csvCell(x){return '"'+String(x).replace(/"/g,'""')+'"'}
+      var csv='﻿Reference,Question,Link,Link id\r\n'+items.map(function(it){return [it.ref,it.q,it.link,it.id].map(csvCell).join(',')}).join('\r\n');
+      var row=el('div',{class:'row'}),ca=el('button',{type:'button'},'Copy all for a spreadsheet'),dl=el('button',{type:'button'},'Download as a CSV file');
+      ca.addEventListener('click',function(){copyRich('',tsv,function(){say('All '+items.length+' rows copied. Paste them into a spreadsheet.')})});
+      dl.addEventListener('click',function(){
+        var a=document.createElement('a'),u=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+        a.href=u;a.download='chalkcast-defense-links.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},2000);
+        say('File downloaded.');
+      });
+      row.appendChild(ca);row.appendChild(dl);box.appendChild(row);
+      var msg=defMsg(title,pts,due,sec,wb)+'(paste this student\'s link here)';
+      var recd='Instructor interaction record\nCreated: '+made.toLocaleString()+'\nAssignment: '+title+'\nRecording time: '+limitWords(sec)+'\nWhiteboard: '+(wb?'on':'off')+(pts?'\nPoints: '+pts:'')+(due?'\nDue: '+due:'')+'\n\n'+items.map(function(it,n){return (n+1)+'. Student reference: '+(it.ref||'not entered')+'\n   Defense question: '+it.q+'\n   Link id: '+it.id}).join('\n')+'\n\nKeep this with each student\'s original submission, the recorded defense, and your feedback. It supports a review of instructor-initiated interaction. It does not by itself establish RSI compliance.';
+      [['Message to send each student (the question is not in it)',msg,'Copy message','Message copied.'],['Your record of these interactions',recd,'Copy record','Record copied.']].forEach(function(x){
+        box.appendChild(el('h3',{},x[0]));box.appendChild(el('pre',{},x[1]));
+        var b=el('button',{type:'button'},x[2]);b.addEventListener('click',function(){copyRich('',x[1],function(){say(x[3])})});box.appendChild(b);
+      });
+      say(items.length+' defense links made. Copy them or download the file before you leave this page.');
     });
   });
   drawWeeks();
