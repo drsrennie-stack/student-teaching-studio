@@ -1,6 +1,6 @@
 /* chalkcast site settings. Paste your Kajabi checkout link between the quotes, then save.
    Every "Get chalkcast" button on the site will use it. Until you do, those buttons go to the price section. */
-var CHALKCAST_CHECKOUT = "";
+var CHALKCAST_CHECKOUT = "https://www.medmasterscollaborative.com/offers/kbK9ZkG4/checkout";
 
 (function(){
   if(!CHALKCAST_CHECKOUT) return;
