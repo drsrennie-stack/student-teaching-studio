@@ -66,12 +66,12 @@ body{margin:0}
 
 /* how it works */
 .cc-land .cc-how{background:#F6F7F9 !important}
-.cc-land .cc-two{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.cc-land .cc-two{display:grid;grid-template-columns:0.8fr 1.2fr;gap:56px;align-items:center}
 .cc-land .cc-steps{list-style:none;margin:30px 0 0;padding:0;display:grid;gap:22px;counter-reset:s}
 .cc-land .cc-steps li{counter-increment:s;padding-left:58px;position:relative;color:#3A4256 !important}
 .cc-land .cc-steps li:before{content:counter(s);position:absolute;left:0;top:2px;width:38px;height:38px;border:1px solid #8B3A2E;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#8B3A2E;font-family:"Plus Jakarta Sans",Arial,sans-serif}
 .cc-land .cc-steps strong{display:block;color:#060B1A !important;font-size:18px}
-.cc-land .cc-shot{width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 14px 40px rgba(6,11,26,0.22)}
+.cc-land .cc-shot{width:100%;height:auto;display:block;border-radius:8px;border:1px solid rgba(6,11,26,0.18);box-shadow:0 22px 60px rgba(6,11,26,0.25)}
 
 /* price band */
 .cc-land .cc-band{background:#060B1A !important;color:#FFFFFF !important;padding:84px 0;text-align:center}
@@ -252,28 +252,7 @@ body{margin:0}
         <li><strong>You grade it</strong>Students upload the video and whiteboard PDF to your course site, such as Canvas, and you score them with your rubric.</li>
       </ol>
     </div>
-    <svg class="cc-shot" viewBox="0 0 560 380" role="img" aria-label="The chalkcast whiteboard with a student's heart diagram, drawing tools on the left, and the student's camera in a circle on the right.">
-      <rect width="560" height="380" rx="6" fill="#060B1A"/>
-      <rect x="16" y="16" width="86" height="30" rx="4" fill="#C0392B"/><circle cx="30" cy="31" r="4" fill="#FFFFFF"/><text x="40" y="36" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Recording</text>
-      <text x="250" y="37" font-family="Arial,sans-serif" font-size="16" fill="#FFFFFF">1:24</text>
-      <rect x="16" y="62" width="44" height="300" rx="4" fill="none" stroke="#3A4256"/>
-      <rect x="22" y="70" width="32" height="32" rx="4" fill="#D9B45A"/>
-      <g stroke="#DCE0E8" stroke-width="2" fill="none"><path d="M30 126l16 -12"/><rect x="29" y="150" width="18" height="12"/><ellipse cx="38" cy="190" rx="10" ry="6"/></g>
-      <circle cx="38" cy="230" r="7" fill="#1F4FD8"/><circle cx="38" cy="254" r="7" fill="#C0392B"/><circle cx="38" cy="278" r="7" fill="#1E8E4E"/>
-      <rect x="72" y="62" width="372" height="300" rx="3" fill="#FFFFFF"/>
-      <text x="84" y="80" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#8B3A2E">PROBLEM</text>
-      <text x="84" y="98" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#060B1A">Trace one drop of blood through the heart.</text>
-      <line x1="72" y1="110" x2="444" y2="110" stroke="#060B1A"/>
-      <g fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M258 170c-40 -44 -104 -8 -84 50c14 40 60 70 84 96c24 -26 70 -56 84 -96c20 -58 -44 -94 -84 -50z" stroke="#060B1A"/>
-        <path d="M258 170v140M190 232h136" stroke="#060B1A"/>
-        <path d="M214 200v52M214 252l-8 -10M214 252l8 -10" stroke="#1F4FD8"/>
-        <path d="M300 280v-52M300 228l-8 10M300 228l8 10" stroke="#C0392B"/>
-      </g>
-      <g font-family="Arial,sans-serif" font-size="11" fill="#060B1A"><text x="196" y="190">RA</text><text x="292" y="190">LA</text><text x="206" y="276">RV</text><text x="296" y="300">LV</text></g>
-      <circle cx="500" cy="118" r="44" fill="#26304F" stroke="#D9B45A" stroke-width="2"/>
-      <circle cx="500" cy="104" r="13" fill="#C9CEDA"/><path d="M472 150a28 24 0 0 1 56 0a44 44 0 0 1 -56 0z" fill="#C9CEDA"/>
-    </svg>
+    <img class="cc-shot" src="chalkcast-step-record.jpg" width="1200" height="660" loading="lazy" alt="The chalkcast whiteboard while a student records: the problem at the top, a blood flow diagram, the drawing tools, the camera circle, and the rubric.">
   </div>
 </section>
 
