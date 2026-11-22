@@ -60,6 +60,7 @@ body{margin:0}
 .cc-land .cc-cell:last-child{border-right:0}
 .cc-land .cc-g2{grid-template-columns:repeat(2,1fr);margin-top:0;border-top:0}
 .cc-land .cc-num{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-size:56px;font-weight:800;line-height:1;color:#8B3A2E !important;margin-bottom:18px}
+.cc-land .cc-ico{display:block;width:84px;height:84px;margin-bottom:20px}
 .cc-land .cc-cell h3{font-size:21px;font-weight:700;color:#060B1A !important;margin-bottom:10px}
 .cc-land .cc-cell p{color:#3A4256 !important}
 
@@ -210,29 +211,29 @@ body{margin:0}
     <h2 id="cc-h2a">Grade the <span>thinking</span>, along with the answer</h2>
     <div class="cc-grid">
       <div class="cc-cell">
-        <div class="cc-num" aria-hidden="true">01</div>
+        <svg class="cc-ico" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="36" fill="#060B1A"/><g transform="translate(5.5,5.5) scale(1.27)" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path stroke="#D9B45A" d="M8 11h32v21H23l-7 7v-7H8z"/><path stroke="#D9B45A" d="M14 18h10M14 24h7"/><path stroke="#C2734D" d="M28 26l3.5-9 3.5 9M29.4 23h4.2"/></g></svg>
         <h3>Visible reasoning</h3>
         <p>Students record their whiteboard work and their spoken explanation together, so you can see and hear how they think.</p>
       </div>
       <div class="cc-cell">
-        <div class="cc-num" aria-hidden="true">02</div>
+        <svg class="cc-ico" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="36" fill="#060B1A"/><g transform="translate(5.5,5.5) scale(1.27)" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect stroke="#D9B45A" x="11" y="9" width="26" height="31" rx="3"/><path stroke="#D9B45A" d="M19 9V6h10v3M26 19h6M26 29h6"/><path stroke="#C2734D" d="M16 19l2 2 4-4M16 29l2 2 4-4"/></g></svg>
         <h3>Grade with your rubric</h3>
         <p>Your rubric sits beside the whiteboard while students teach. Their video and whiteboard PDF arrive in your course site, ready to score.</p>
       </div>
       <div class="cc-cell">
-        <div class="cc-num" aria-hidden="true">03</div>
+        <svg class="cc-ico" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="36" fill="#060B1A"/><g transform="translate(5.5,5.5) scale(1.27)" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path stroke="#D9B45A" d="M12 6h16l8 8v28H12z"/><path stroke="#D9B45A" d="M28 6v8h8"/><path stroke="#C2734D" fill="#C2734D" d="M21 23l8 5-8 5z"/></g></svg>
         <h3>Better evidence</h3>
         <p>Each assignment becomes a record of a student's process, communication, and understanding of the content.</p>
       </div>
     </div>
     <div class="cc-grid cc-g2">
       <div class="cc-cell">
-        <div class="cc-num" aria-hidden="true">04</div>
+        <svg class="cc-ico" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="36" fill="#060B1A"/><g transform="translate(5.5,5.5) scale(1.27)" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect stroke="#D9B45A" x="8" y="15" width="25" height="25" rx="3"/><path stroke="#D9B45A" d="M15 15v-4a3 3 0 0 1 3-3h19a3 3 0 0 1 3 3v19a3 3 0 0 1-3 3h-4"/><path stroke="#C2734D" d="M16.500 24a4 4 0 1 1 6 3.400c-1.300.800-2 1.500-2 2.800"/><circle cx="20.500" cy="35" r="1.300" fill="#C2734D" stroke="none"/></g></svg>
         <h3>Question bank</h3>
         <p>Choose a ready-made question by competency, either multiple choice or a draw to know it prompt. Each comes with a starter rubric you can edit. The bank starts with human anatomy.</p>
       </div>
       <div class="cc-cell">
-        <div class="cc-num" aria-hidden="true">05</div>
+        <svg class="cc-ico" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="36" fill="#060B1A"/><g transform="translate(5.5,5.5) scale(1.27)" fill="none" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect stroke="#D9B45A" x="16" y="7" width="11" height="20" rx="5.500"/><path stroke="#D9B45A" d="M10 22a11.500 11.500 0 0 0 23 0M21.500 33.500V40M15 40h13"/><circle stroke="#C2734D" cx="36" cy="12" r="6"/><path stroke="#C2734D" d="M36 9v3l2 1.500"/></g></svg>
         <h3>Assignment defense</h3>
         <p>Ask one student a follow-up question about work they turned in. The question stays hidden until they press Begin Defense, and recording starts at the same moment.</p>
       </div>
@@ -321,6 +322,10 @@ var btn=w.querySelector('.kajabi-form__btn');if(btn){if(btn.tagName==='INPUT')bt
 window.addEventListener('load',send);window.addEventListener('resize',send);
 if(window.ResizeObserver){new ResizeObserver(send).observe(document.body)}
 document.addEventListener('toggle',send,true);send()})();
+/* When this page is shown inside another page, jump links ask that page to scroll. */
+document.addEventListener('click',function(e){var l=e.target.closest&&e.target.closest('a[href^="#"]');if(!l||window.parent===window)return;
+var t=document.getElementById(l.getAttribute('href').slice(1));if(!t)return;e.preventDefault();
+window.parent.postMessage({id:'chalkcast-home',type:'scroll-to',top:t.getBoundingClientRect().top+window.pageYOffset},'*')});
 </script>
 </body>
 </html>
