@@ -206,6 +206,7 @@ html.standalone #s5{justify-content:flex-start}
 .defense .hint{font-size:14px;color:#4A5060;margin:10px 0 0}
 .defense pre{white-space:pre-wrap;font:inherit;font-size:15px;line-height:1.45;background:#F4F5F7;color:#070A15;border-radius:10px;padding:14px 16px;margin:8px 0 10px}
 .defense .ck{margin:12px 0 0}.defense .ck input{width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0}
+.acct{background:#F4F5F7;color:#070A15;border-radius:12px;padding:18px 20px;margin:18px 0 6px}.acct h3{margin:0 0 6px}.acct p{margin:0 0 8px}.acct .tw{overflow-x:auto;background:#FFFFFF;border-radius:8px;margin-top:12px}.acct table{width:100%;border-collapse:collapse;font-size:14px}.acct caption{text-align:left;font-weight:600;padding:10px 10px 6px}.acct th,.acct td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}.acct td button{margin:0 6px 6px 0}.acct ul.ev{margin:6px 0 0;padding-left:18px;font-size:13px}
 .bulk{border-top:1px solid var(--line);margin-top:26px;padding-top:20px}#bulkh{margin:0 0 6px}#bulkout h3{margin:22px 0 0}#bulkout .row{margin:0 0 6px}.bulk .tw{overflow-x:auto}.bulk table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}.bulk caption{text-align:left;font-weight:600;padding:0 0 8px}.bulk th,.bulk td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}.bulk td input{width:100%;min-width:150px}
 body.defense-mode canvas{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .defense label{display:block;margin:14px 0 6px}.defense .ck label{display:inline;margin:0}.defense select{display:block}
@@ -567,6 +568,22 @@ body.light{background:var(--white);color:var(--navy)}
         <div class="defense" role="group" aria-labelledby="defh">
           <h2 id="defh">Assignment defense</h2>
           <p>Ask one student a question about work they already turned in. The question stays hidden until the student presses Begin Defense, and recording starts at the same moment.</p>
+          <div class="acct" role="group" aria-labelledby="accth">
+            <h3 id="accth">One attempt on any device</h3>
+            <p id="acctmsg">Sign in with the email you used to buy chalkcast. Links you make while signed in are kept on the chalkcast server. The question is released one time, so a second device cannot start over, and you can see when each link was opened. No student names, videos, or files are stored.</p>
+            <div id="acctout">
+              <label for="acctemail">Your email</label>
+              <input type="email" id="acctemail" autocomplete="email" maxlength="120">
+              <div class="row"><button type="button" id="acctsend">Email me a sign-in link</button></div>
+            </div>
+            <div id="acctin" hidden>
+              <p id="acctwho"></p>
+              <p class="ck"><input type="checkbox" id="saveref"><label for="saveref">Save my student references with my links on the server</label></p>
+              <div class="row"><button type="button" id="acctlist">Show my defense links</button><button type="button" id="acctoff">Sign out</button></div>
+              <div id="mylinks" aria-live="polite"></div>
+            </div>
+            <p id="accterr" class="err" role="alert"></p>
+          </div>
           <label for="dtitle">Assignment title</label>
           <input type="text" id="dtitle" maxlength="80" autocomplete="off">
           <label for="dref">Student reference for your own record (optional). Use initials or an ID. It is not put in the link.</label>
@@ -594,7 +611,7 @@ body.light{background:var(--white);color:var(--navy)}
             <p id="bulkerr" class="err" role="alert"></p>
             <div id="bulkout"></div>
           </div>
-          <p class="hint">Nothing you type in this section is saved in the browser, so copy what you need before you leave. The question is packed into the link so it cannot be read at a glance, but it is not locked on a server, and a student with technical skill could unpack it. The one-attempt rule is kept on the student's own device. Server storage and server-side limits come with the sign-in version.</p>
+          <p class="hint">Nothing you type in this section is saved in the browser, so copy what you need before you leave. When you are signed in, each question is kept on the chalkcast server and released one time. When you are not signed in, the question is packed into the link, a student with technical skill could unpack it, and the one-attempt rule is kept on the student's own device.</p>
         </div>
         <dialog id="bank" aria-labelledby="bankh">
           <div class="bhead">
@@ -1025,6 +1042,12 @@ body.light{background:var(--white);color:var(--navy)}
   /* what the instructor's link carries: problem, rubric, time limit, course name.
      New links pack it into one short value (z). Older plain links and the demo link still work. */
   var fromLink='',rubric=[],demoMode=false,defense=null;
+  /* chalkcast server (Supabase). The publishable key is safe to ship. Students never sign in. */
+  var SB_URL='https://gwtufsphromsilugtecc.supabase.co',SB_KEY='sb_publishable_2qQAJTJgu-IIBdctS1WQJw_oxfpIENN';
+  function rpc(fn,args,keep){
+    return fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',keepalive:!!keep,headers:{'Content-Type':'application/json',apikey:SB_KEY},body:JSON.stringify(args)})
+      .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json()});
+  }
   function rubCount(){
     var n=rubric.filter(function(r){return r.on}).length;
     $('rubcount').textContent=n+' of '+rubric.length+' covered';
@@ -1065,13 +1088,16 @@ body.light{background:var(--white);color:var(--navy)}
     $('limit').disabled=true;$('record').textContent='Begin Defense';
     $('warn').textContent=defense.wb?'You are not recording yet. Practice on the whiteboard if you like. Your question appears, and recording starts, when you press Begin Defense.':'You are not recording yet. Your question appears, and recording starts, when you press Begin Defense.';
     try{var u=localStorage.getItem('chalkcast-defense-'+defense.id);if(u)defense.used=Number(u)}catch(e){}
+    try{var tk=localStorage.getItem('chalkcast-defense-tok-'+defense.id);if(tk)defense.token=tk}catch(e){}
+    if(!defense.used&&defense.began){defense.used=defense.began;defense.elsewhere=true}
   }
   function usedGate(){
-    gate('This defense was already started',['It was started on this device on '+new Date(defense.used).toLocaleString()+'.','You get one attempt.','If something went wrong, contact your instructor.'],[['Close',closeGate,true]]);
+    gate('This defense was already started',['It was started '+(defense.elsewhere?'':'on this device ')+'on '+new Date(defense.used).toLocaleString()+'.','You get one attempt.','If something went wrong, contact your instructor.'],[['Close',closeGate,true]]);
   }
   function applyLink(d){
     if(d.d){
       defense={q:String(d.p||''),title:String(d.t||'Assignment defense').slice(0,80),due:String(d.u||'').slice(0,60),wb:d.w!==0,id:String(d.i||'x').replace(/[^a-z0-9]/gi,'').slice(0,24),events:[],used:0};
+      if(d.srv){defense.srv=true;defense.code=String(d.i);defense.began=d.began?Date.parse(d.began)||0:0}
       fromLink='defense:'+defense.id;
     }else if(d.p){
       fromLink=String(d.p);
@@ -1123,6 +1149,12 @@ body.light{background:var(--white);color:var(--navy)}
     demoMode=true;
     applyLink({p:'Draw and label the four chambers of the heart. Then trace the path of blood through them.',r:['Labels all four chambers','Shows the direction of blood flow','Explains each step out loud'],l:60,c:'demo'});
     linkReady=Promise.resolve();
+  }else if(qs.get('d')){
+    var dcode=String(qs.get('d')).replace(/[^a-f0-9]/gi,'').slice(0,40);
+    linkReady=rpc('defense_info',{p_code:dcode}).then(function(r){
+      if(!r||!r.found){linkError=true;layoutProblem();return}
+      applyLink({d:1,p:'',l:r.limit_sec,t:r.title,i:dcode,w:r.whiteboard?1:0,u:r.due||'',c:r.course||'',srv:1,began:r.began_at});
+    },function(){linkError='net';layoutProblem()});
   }else if(qs.get('z')){
     linkReady=(window.DecompressionStream?unpack(qs.get('z')):Promise.reject()).then(applyLink,function(){linkError=true;layoutProblem()});
   }else{
@@ -1278,16 +1310,35 @@ body.light{background:var(--white);color:var(--navy)}
     if(!window.MediaRecorder||!stage.captureStream){say('This browser cannot record here. Try Chrome, Edge or Safari on a computer.');return}
     if(!media){go(2);say('Turn on your camera and microphone first.');return}
     if(defense){
-      if(defense.used){say('This defense was already started on this device. Contact your instructor.');return}
-      /* clear any practice drawing, then start the recorder and show the question in the same step */
-      dropSel();strokes=[];redraw();bgImg=null;bgBlob=null;$('nopic').hidden=true;textRow=0;
-      pages=[{ink:ink,ictx:ictx,strokes:strokes,bg:null,bgBlob:null}];pi=0;updatePager();setZoom(1);
-      startRecording();
-      if(state!=='rec')return;
-      $('problem').value=defense.q;layoutProblem();readQ();
-      defense.revealAt=defense.recAt=Date.now();defense.used=defense.revealAt;
-      try{localStorage.setItem('chalkcast-defense-'+defense.id,String(defense.revealAt))}catch(e){}
-      saveBoard();say('Your question is showing and recording has started.');
+      if(defense.used){say('This defense was already started'+(defense.elsewhere?'':' on this device')+'. Contact your instructor.');return}
+      var beginDefense=function(){
+        /* clear any practice drawing, then start the recorder and show the question in the same step */
+        dropSel();strokes=[];redraw();bgImg=null;bgBlob=null;$('nopic').hidden=true;textRow=0;
+        pages=[{ink:ink,ictx:ictx,strokes:strokes,bg:null,bgBlob:null}];pi=0;updatePager();setZoom(1);
+        startRecording();
+        if(state!=='rec')return;
+        $('problem').value=defense.q;layoutProblem();readQ();
+        defense.revealAt=defense.recAt=Date.now();defense.used=defense.revealAt;
+        try{localStorage.setItem('chalkcast-defense-'+defense.id,String(defense.revealAt))}catch(e){}
+        saveBoard();say('Your question is showing and recording has started.');
+      };
+      if(defense.srv&&!defense.q){
+        /* the server releases the question one time, on any device */
+        if(defense.busy)return;
+        defense.busy=true;say('Getting your question.');
+        rpc('defense_begin',{p_code:defense.code}).then(function(r){
+          defense.busy=false;
+          if(r&&r.ok){
+            defense.q=String(r.question||'');defense.token=r.token;
+            try{localStorage.setItem('chalkcast-defense-tok-'+defense.id,r.token)}catch(e){}
+            beginDefense();
+          }else if(r&&r.reason==='used'){
+            defense.used=Date.parse(r.began_at)||Date.now();defense.elsewhere=true;setState(state);usedGate();
+          }else say('This defense link is no longer available. Contact your instructor.');
+        },function(){defense.busy=false;say('chalkcast could not reach its server. Check your connection, then press Begin Defense again.')});
+        return;
+      }
+      beginDefense();
       return;
     }
     var n=3,box=$('count');
@@ -1358,6 +1409,10 @@ body.light{background:var(--white);color:var(--navy)}
   },250);
   function finish(){
     if(defense&&!defense.endAt)defense.endAt=Date.now();
+    if(defense&&defense.srv&&defense.token&&!defense.sent){
+      defense.sent=true;
+      rpc('defense_finish',{p_code:defense.code,p_token:defense.token,p_events:defense.events.slice(0,200).map(function(e){return{t:new Date(e[0]).toISOString(),e:String(e[1]).slice(0,60)}})},true).catch(function(){defense.sent=false});
+    }
     if(recMeta){recMeta.elapsed=elapsed;recMeta.done=true;kvPut('rec',recMeta)}
     showResult(chunks,rec.mimeType||'video/webm');
     say('Recording finished. Your video is ready.');
@@ -1500,6 +1555,7 @@ body.light{background:var(--white);color:var(--navy)}
   /* hidden entrance: adding ?setup to the address opens this screen. Students never get that address. */
   if(new URLSearchParams(location.search).has('setup')){
     hideAll();$('s5').hidden=false;$('homenav').hidden=false;
+    loadSb().then(function(){acctShow();sb.auth.onAuthStateChange(function(ev){if(ev==='SIGNED_IN'||ev==='SIGNED_OUT')setTimeout(acctShow,0)})},function(){$('acctmsg').textContent='Sign-in is not available right now. You can still make links below. They keep the one-attempt rule on the student\'s own device.';$('acctout').hidden=true});
   }
   document.querySelectorAll('.leave5').forEach(function(b){
     b.addEventListener('click',function(){
@@ -1612,9 +1668,10 @@ body.light{background:var(--white);color:var(--navy)}
     var sec=Number($('dlimit').value),wb=$('dwb').checked,due=$('ddue').value.trim(),pts=$('dpts').value.trim(),ref=$('dref').value.trim(),course=$('coursename').value.trim();
     var id=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
     var d={d:1,p:q,l:sec,t:title,i:id,w:wb?1:0};if(due)d.u=due;if(course)d.c=course;
-    pack(d).then(function(z){
-      if(!z){err.textContent='This browser cannot make a defense link. Use a current version of Chrome, Edge, or Safari.';return}
-      var link=location.href.split('#')[0].split('?')[0]+'?z='+z,made=new Date();
+    var base1=location.href.split('#')[0].split('?')[0],one={q:q,ref:ref};
+    (srvOn?srvLinks([one],{title:title,sec:sec,wb:wb,due:due,pts:pts,course:course,base:base1}).then(function(){id=one.id;return one.link}):pack(d).then(function(z){return z?base1+'?z='+z:''})).then(function(link){
+      if(!link){err.textContent='This browser cannot make a defense link. Use a current version of Chrome, Edge, or Safari.';return}
+      var made=new Date();
       var msg=defMsg(title,pts,due,sec,wb)+link;
       var recd='Instructor interaction record\nCreated: '+made.toLocaleString()+'\nAssignment: '+title+'\nStudent reference: '+(ref||'not entered')+'\nDefense question: '+q+'\nRecording time: '+limitWords(sec)+'\nWhiteboard: '+(wb?'on':'off')+(pts?'\nPoints: '+pts:'')+(due?'\nDue: '+due:'')+'\nLink id: '+id+'\n\nKeep this with the student\'s original submission, the recorded defense, and your feedback. It supports a review of instructor-initiated interaction. It does not by itself establish RSI compliance.';
       function block(head,text,btn,done){
@@ -1626,9 +1683,119 @@ body.light{background:var(--white);color:var(--navy)}
       var cb=el('button',{type:'button'},'Copy link');cb.addEventListener('click',function(){copyRich('',link,function(){say('Link copied.')})});box.appendChild(cb);
       block('Message to send the student (the question is not in it)',msg,'Copy message','Message copied.');
       block('Your record of this interaction',recd,'Copy record','Record copied.');
-      say('Defense link made. Copy the link, the message, and your record.');
-    });
+      say('Defense link made. Copy the link, the message, and your record.'+(srvOn?' It allows one attempt on any device.':''));
+    },function(e){err.textContent=srvFail(e)});
   });
+  /* ---- instructor account (setup page only). Students never load this. ---- */
+  var sb=null,srvOn=false,sbLoading=null;
+  function srvFail(e){return 'The links could not be saved to the chalkcast server'+(e&&e.message?' ('+String(e.message).slice(0,120)+')':'')+'. Check your connection and try again, or sign out to make links that work without the server.'}
+  function loadSb(){
+    if(sb)return Promise.resolve(sb);
+    if(sbLoading)return sbLoading;
+    sbLoading=new Promise(function(ok,no){
+      var t=document.createElement('script');t.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';t.async=true;
+      t.onload=function(){
+        try{sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'implicit',storageKey:'chalkcast-instructor'}});ok(sb)}catch(e){no(e)}
+      };
+      t.onerror=function(){sbLoading=null;no(new Error('load'))};
+      document.head.appendChild(t);
+    });
+    return sbLoading;
+  }
+  function srvLinks(items,o){
+    var keep=$('saveref').checked;
+    var rows=items.map(function(it){return{title:o.title,question:it.q,limit_sec:o.sec,whiteboard:!!o.wb,due:o.due||null,course:o.course||null,points:o.pts||null,ref:keep&&it.ref?it.ref:null}});
+    return sb.from('defenses').insert(rows).select('code').then(function(res){
+      if(res.error)throw res.error;
+      if(!res.data||res.data.length!==items.length)throw new Error('The server returned an unexpected answer');
+      res.data.forEach(function(d,i){items[i].id=d.code;items[i].link=o.base+'?d='+d.code});
+      return true;
+    });
+  }
+  function acctShow(){
+    return sb.auth.getSession().then(function(r){
+      var ses=r&&r.data&&r.data.session,err=$('accterr');
+      $('acctout').hidden=!!ses;$('acctin').hidden=!ses;srvOn=false;
+      if(!ses){$('mylinks').textContent='';return}
+      return sb.rpc('my_access').then(function(a){
+        var d=a&&a.data,who=$('acctwho');who.textContent='';
+        if(a.error||!d){who.textContent='Signed in, but your subscription could not be checked. Reload the page to try again.';return}
+        if(d.active){
+          srvOn=true;
+          who.textContent='Signed in as '+d.email+'. Your subscription is active through '+new Date(d.active_until).toLocaleDateString()+'. The links you make now allow one attempt on any device.';
+        }else{
+          who.appendChild(document.createTextNode('Signed in as '+d.email+'. No active chalkcast subscription was found for this email, so your links will keep the one-attempt rule on the student\'s own device. If you bought with a different email, sign out and use that one. '));
+          var a2=el('a',{href:'index.html#price',target:'_top'},'See the price');who.appendChild(a2);
+        }
+        err.textContent='';
+      });
+    });
+  }
+  function statusWords(d){
+    function when(x){return new Date(x).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}
+    if(d.finished_at)return 'Finished '+when(d.finished_at);
+    if(d.began_at)return 'Started '+when(d.began_at)+', no finish reported';
+    if(d.opened_at)return 'Opened '+when(d.opened_at)+', not started';
+    return 'Not opened';
+  }
+  function myLinks(){
+    var box=$('mylinks');box.textContent='Loading.';
+    sb.from('defenses').select('code,title,question,ref,created_at,opened_at,began_at,finished_at,events').order('created_at',{ascending:false}).limit(300).then(function(res){
+      box.textContent='';
+      if(res.error){$('accterr').textContent='Your links could not be loaded. Check your connection and try again.';return}
+      if(!res.data.length){box.appendChild(el('p',{},'You have not made any server links yet.'));return}
+      var base=location.href.split('#')[0].split('?')[0],wrap=el('div',{class:'tw'}),tb=el('table',{}),hr=el('tr',{});
+      tb.appendChild(el('caption',{},'Your defense links, newest first ('+res.data.length+')'));
+      ['Made','Assignment','Question','Status','Actions'].forEach(function(h){hr.appendChild(el('th',{scope:'col'},h))});
+      var th=el('thead',{});th.appendChild(hr);tb.appendChild(th);
+      var body=el('tbody',{});
+      res.data.forEach(function(d,n){
+        var tr=el('tr',{}),st=el('td',{},statusWords(d)),ac=el('td',{}),num=n+1;
+        if(d.events&&d.events.length){
+          var ul=el('ul',{class:'ev'});
+          d.events.slice(0,12).forEach(function(e){ul.appendChild(el('li',{},new Date(e.t).toLocaleTimeString()+': '+e.e))});
+          if(d.events.length>12)ul.appendChild(el('li',{},'and '+(d.events.length-12)+' more'));
+          st.appendChild(ul);
+        }
+        var c=el('button',{type:'button','aria-label':'Copy link for row '+num},'Copy link');
+        c.addEventListener('click',function(){copyRich('',base+'?d='+d.code,function(){say('Link for row '+num+' copied.')})});
+        var rs=el('button',{type:'button','aria-label':'Give a new attempt for row '+num},'New attempt');
+        rs.addEventListener('click',function(){
+          if(rs.dataset.sure!=='1'){rs.dataset.sure='1';rs.textContent='Press again to confirm';say('Press again to clear this attempt and let the student start over.');return}
+          sb.rpc('defense_reset',{p_code:d.code}).then(function(x){if(x.error||!x.data){$('accterr').textContent='The attempt could not be reset.';return}say('Row '+num+' was reset. The same link now allows one new attempt.');myLinks()});
+        });
+        var del=el('button',{type:'button','aria-label':'Delete row '+num},'Delete');
+        del.addEventListener('click',function(){
+          if(del.dataset.sure!=='1'){del.dataset.sure='1';del.textContent='Press again to delete';say('Press again to delete this link. This cannot be undone.');return}
+          sb.from('defenses').delete().eq('code',d.code).then(function(x){if(x.error){$('accterr').textContent='The link could not be deleted.';return}say('Row '+num+' was deleted. Its link no longer works.');myLinks()});
+        });
+        ac.appendChild(c);ac.appendChild(rs);ac.appendChild(del);
+        tr.appendChild(el('th',{scope:'row'},new Date(d.created_at).toLocaleDateString()));
+        tr.appendChild(el('td',{},d.title+(d.ref?' ('+d.ref+')':'')));tr.appendChild(el('td',{},d.question));tr.appendChild(st);tr.appendChild(ac);
+        body.appendChild(tr);
+      });
+      tb.appendChild(body);wrap.appendChild(tb);box.appendChild(wrap);
+      say(res.data.length+' links loaded.');
+    });
+  }
+  $('acctsend').addEventListener('click',function(){
+    var em=$('acctemail').value.trim().toLowerCase(),err=$('accterr');err.textContent='';
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){err.textContent='Type the email you used to buy chalkcast.';$('acctemail').focus();return}
+    $('acctsend').disabled=true;
+    loadSb().then(function(){
+      return sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.href.split('#')[0].split('?')[0]+'?setup'}});
+    }).then(function(r){
+      $('acctsend').disabled=false;
+      if(r.error){err.textContent='The sign-in email could not be sent ('+String(r.error.message).slice(0,120)+'). Wait a minute and try again.';return}
+      say('Check your email for a sign-in link from chalkcast. Open it on this computer.');
+      $('acctmsg').textContent='A sign-in link was sent to '+em+'. Open it on this computer and you will come back here signed in. It can take a minute to arrive.';
+    },function(){$('acctsend').disabled=false;err.textContent='Sign-in is not available right now. You can still make links without signing in.'});
+  });
+  $('acctoff').addEventListener('click',function(){
+    if(!sb)return;
+    sb.auth.signOut().then(function(){$('mylinks').textContent='';acctShow();say('Signed out.')});
+  });
+  $('acctlist').addEventListener('click',function(){if(sb)myLinks()});
   function parseCSV(t){
     var rows=[],row=[],cell='',q=false;
     for(var i=0;i<t.length;i++){
@@ -1680,11 +1847,11 @@ body.light{background:var(--white);color:var(--navy)}
     if(items.length>200){err.textContent='That is '+items.length+' questions. Make 200 or fewer at a time.';return}
     var sec=Number($('dlimit').value),wb=$('dwb').checked,due=$('ddue').value.trim(),pts=$('dpts').value.trim(),course=$('coursename').value.trim();
     var base=location.href.split('#')[0].split('?')[0],made=new Date();
-    Promise.all(items.map(function(it,n){
+    (srvOn?srvLinks(items,{title:title,sec:sec,wb:wb,due:due,pts:pts,course:course,base:base}):Promise.all(items.map(function(it,n){
       it.id=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4)+n.toString(36);
       var d={d:1,p:it.q,l:sec,t:title,i:it.id,w:wb?1:0};if(due)d.u=due;if(course)d.c=course;
       return pack(d).then(function(z){it.link=z?base+'?z='+z:''});
-    })).then(function(){
+    }))).then(function(){
       if(!items[0].link){err.textContent='This browser cannot make defense links. Use a current version of Chrome, Edge, or Safari.';return}
       var wrap=el('div',{class:'tw'}),tb=el('table',{}),hr=el('tr',{});
       tb.appendChild(el('caption',{},items.length+(items.length===1?' defense link':' defense links')+' for '+title));
@@ -1717,8 +1884,8 @@ body.light{background:var(--white);color:var(--navy)}
         box.appendChild(el('h3',{},x[0]));box.appendChild(el('pre',{},x[1]));
         var b=el('button',{type:'button'},x[2]);b.addEventListener('click',function(){copyRich('',x[1],function(){say(x[3])})});box.appendChild(b);
       });
-      say(items.length+' defense links made. Copy them or download the file before you leave this page.');
-    });
+      say(items.length+' defense links made. Copy them or download the file before you leave this page.'+(srvOn?' Each allows one attempt on any device.':''));
+    },function(e){err.textContent=srvFail(e)});
   });
   drawWeeks();
   try{if(localStorage.getItem('chalkcast-studio')==='off')$('usestudio').checked=false}catch(e){}
@@ -1881,7 +2048,8 @@ body.light{background:var(--white);color:var(--navy)}
     updatePager();setZoom(1);
   }
   linkReady.then(function(){
-    if(linkError&&!blocked.length)gate('This link could not be opened',['The assignment link is damaged or cut short.','Open the link from your assignment again.','If it still fails, update your browser or tell your instructor.'],[['Continue without it',closeGate]]);
+    if(linkError==='net'&&!blocked.length)gate('This defense could not be loaded',['chalkcast could not reach its server.','Check your internet connection, then reload this page.','If it still fails, tell your instructor.'],[['Reload',function(){location.reload()},true]]);
+    else if(linkError&&!blocked.length)gate('This link could not be opened',['The assignment link is damaged or cut short.','Open the link from your assignment again.','If it still fails, update your browser or tell your instructor.'],[['Continue without it',closeGate]]);
     if(demoMode&&!blocked.length)say('This is a demo. Recordings stop at one minute.');
   });
   if(!setupMode&&!blocked.length){
