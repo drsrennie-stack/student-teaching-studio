@@ -206,6 +206,7 @@ html.standalone #s5{justify-content:flex-start}
 .defense .hint{font-size:14px;color:#4A5060;margin:10px 0 0}
 .defense pre{white-space:pre-wrap;font:inherit;font-size:15px;line-height:1.45;background:#F4F5F7;color:#070A15;border-radius:10px;padding:14px 16px;margin:8px 0 10px}
 .defense .ck{margin:12px 0 0}.defense .ck input{width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0}
+.acct label{display:block;margin:10px 0 6px;font-weight:600}.acct .ck{margin:10px 0 0}.acct .ck input{width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0}.acct .ck label{display:inline;margin:0;font-weight:400}.acct h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px}.acct input[type=email]{display:block;width:100%;max-width:460px;font:inherit;font-size:17px;padding:12px 14px;border:1.5px solid #070A15;border-radius:10px;background:#FFFFFF;color:#070A15}.acct input[type=email]:focus-visible{outline:3px solid #C9A14A;outline-offset:2px}
 .acct{background:#F4F5F7;color:#070A15;border-radius:12px;padding:18px 20px;margin:18px 0 6px}.acct h3{margin:0 0 6px}.acct p{margin:0 0 8px}.acct .tw{overflow-x:auto;background:#FFFFFF;border-radius:8px;margin-top:12px}.acct table{width:100%;border-collapse:collapse;font-size:14px}.acct caption{text-align:left;font-weight:600;padding:10px 10px 6px}.acct th,.acct td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}.acct td button{margin:0 6px 6px 0}.acct ul.ev{margin:6px 0 0;padding-left:18px;font-size:13px}
 .bulk{border-top:1px solid var(--line);margin-top:26px;padding-top:20px}#bulkh{margin:0 0 6px}#bulkout h3{margin:22px 0 0}#bulkout .row{margin:0 0 6px}.bulk .tw{overflow-x:auto}.bulk table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}.bulk caption{text-align:left;font-weight:600;padding:0 0 8px}.bulk th,.bulk td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}.bulk td input{width:100%;min-width:150px}
 body.defense-mode canvas{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -551,7 +552,23 @@ body.light{background:var(--white);color:var(--navy)}
           <li>Press the button to get a student link and ready-to-paste instructions for each one.</li>
           <li>Your entries are saved on this computer only. Save them to a file to move them or share them.</li>
         </ul>
-        <label for="coursename" style="display:block;margin-top:14px">Course or college name shown to students (optional)</label>
+        <div class="acct" role="group" aria-labelledby="accth">
+            <h2 id="accth">Sign in</h2>
+            <p id="acctmsg">Sign in with the email you used to buy chalkcast. We email you a link, so there is no password. When you are signed in, your defense links allow one attempt on any device, and you can see when each link was opened. No student names, videos, or files are stored.</p>
+            <div id="acctout">
+              <label for="acctemail">Your email</label>
+              <input type="email" id="acctemail" autocomplete="email" maxlength="120">
+              <div class="row"><button type="button" id="acctsend">Email me a sign-in link</button></div>
+            </div>
+            <div id="acctin" hidden>
+              <p id="acctwho"></p>
+              <p class="ck"><input type="checkbox" id="saveref"><label for="saveref">Save my student references with my links on the server</label></p>
+              <div class="row"><button type="button" id="acctlist">Show my defense links</button><button type="button" id="acctoff">Sign out</button></div>
+              <div id="mylinks" aria-live="polite"></div>
+            </div>
+            <p id="accterr" class="err" role="alert"></p>
+          </div>
+          <label for="coursename" style="display:block;margin-top:14px">Course or college name shown to students (optional)</label>
         <input type="text" id="coursename" maxlength="40" placeholder="For example BIO 004" autocomplete="off">
         <div class="row">
           <button type="button" id="exportset">Save my assignments to a file</button>
@@ -568,22 +585,7 @@ body.light{background:var(--white);color:var(--navy)}
         <div class="defense" role="group" aria-labelledby="defh">
           <h2 id="defh">Assignment defense</h2>
           <p>Ask one student a question about work they already turned in. The question stays hidden until the student presses Begin Defense, and recording starts at the same moment.</p>
-          <div class="acct" role="group" aria-labelledby="accth">
-            <h3 id="accth">One attempt on any device</h3>
-            <p id="acctmsg">Sign in with the email you used to buy chalkcast. Links you make while signed in are kept on the chalkcast server. The question is released one time, so a second device cannot start over, and you can see when each link was opened. No student names, videos, or files are stored.</p>
-            <div id="acctout">
-              <label for="acctemail">Your email</label>
-              <input type="email" id="acctemail" autocomplete="email" maxlength="120">
-              <div class="row"><button type="button" id="acctsend">Email me a sign-in link</button></div>
-            </div>
-            <div id="acctin" hidden>
-              <p id="acctwho"></p>
-              <p class="ck"><input type="checkbox" id="saveref"><label for="saveref">Save my student references with my links on the server</label></p>
-              <div class="row"><button type="button" id="acctlist">Show my defense links</button><button type="button" id="acctoff">Sign out</button></div>
-              <div id="mylinks" aria-live="polite"></div>
-            </div>
-            <p id="accterr" class="err" role="alert"></p>
-          </div>
+          <p class="hint" id="defsign">Sign in at the top of this page to make defense links that allow one attempt on any device. Without signing in, the one-attempt rule is kept on the student's own device.</p>
           <label for="dtitle">Assignment title</label>
           <input type="text" id="dtitle" maxlength="80" autocomplete="off">
           <label for="dref">Student reference for your own record (optional). Use initials or an ID. It is not put in the link.</label>
