@@ -208,6 +208,7 @@ html.standalone #s5{justify-content:flex-start}
 .defense pre{white-space:pre-wrap;font:inherit;font-size:15px;line-height:1.45;background:#F4F5F7;color:#070A15;border-radius:10px;padding:14px 16px;margin:8px 0 10px}
 .defense .ck{margin:12px 0 0}.defense .ck input{width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0}
 .acct label{display:block;margin:10px 0 6px;font-weight:600}.acct .ck{margin:10px 0 0}.acct .ck input{width:20px;height:20px;vertical-align:middle;margin:0 8px 0 0}.acct .ck label{display:inline;margin:0;font-weight:400}.acct h2{font-family:"Plus Jakarta Sans",Arial,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px}.acct input[type=email]{display:block;width:100%;max-width:460px;font:inherit;font-size:17px;padding:12px 14px;border:1.5px solid #070A15;border-radius:10px;background:#FFFFFF;color:#070A15}.acct input[type=email]:focus-visible{outline:3px solid #C9A14A;outline-offset:2px}
+#installhelp{margin:10px 0 0;font-size:15px}
 .acct{background:#F4F5F7;color:#070A15;border-radius:12px;padding:18px 20px;margin:18px 0 6px}.acct h3{margin:0 0 6px}.acct p{margin:0 0 8px}.acct .tw{overflow-x:auto;background:#FFFFFF;border-radius:8px;margin-top:12px}.acct table{width:100%;border-collapse:collapse;font-size:14px}.acct caption{text-align:left;font-weight:600;padding:10px 10px 6px}.acct th,.acct td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}.acct td button{margin:0 6px 6px 0}.acct ul.ev{margin:6px 0 0;padding-left:18px;font-size:13px}
 .bulk{border-top:1px solid var(--line);margin-top:26px;padding-top:20px}#bulkh{margin:0 0 6px}#bulkout h3{margin:22px 0 0}#bulkout .row{margin:0 0 6px}.bulk .tw{overflow-x:auto}.bulk table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}.bulk caption{text-align:left;font-weight:600;padding:0 0 8px}.bulk th,.bulk td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}.bulk td input{width:100%;min-width:150px}
 body.defense-mode canvas{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -564,7 +565,8 @@ body.light{background:var(--white);color:var(--navy)}
             <div id="acctin" hidden>
               <p id="acctwho"></p>
               <p class="ck"><input type="checkbox" id="saveref"><label for="saveref">Save my student references with my links on the server</label></p>
-              <div class="row"><button type="button" id="acctlist">Show my defense links</button><button type="button" id="acctoff">Sign out</button></div>
+              <div class="row"><button type="button" id="install">Install chalkcast on this computer</button><button type="button" id="acctlist">Show my defense links</button><button type="button" id="acctoff">Sign out</button></div>
+              <p id="installhelp" role="status" aria-live="polite"></p>
               <div id="mylinks" aria-live="polite"></div>
             </div>
             <p id="accterr" class="err" role="alert"></p>
@@ -619,14 +621,20 @@ body.light{background:var(--white);color:var(--navy)}
           <div class="bhead">
             <h3 id="bankh">Question bank</h3>
             <p class="bsub">Pick a question. It fills in the problem and a starter rubric, and you can edit both.</p>
+            <p class="bsub" id="bankscope"><strong>The preloaded questions cover human anatomy and human physiology only.</strong> For any other subject, such as chemistry or nursing, close this box and type your own problem.</p>
             <button type="button" class="bclose" id="bankclose">Close</button>
             <div class="brow">
+              <div><label for="bankcourse">Course</label><select id="bankcourse"><option value="chalkcast-bank-bio004.js">Human Anatomy</option><option value="chalkcast-bank-bio005.js">Human Physiology</option></select></div>
               <div><label for="bankunit">Unit</label><select id="bankunit"></select></div>
               <div><label for="bankcomp">Competency</label><select id="bankcomp"></select></div>
             </div>
             <div class="btype" role="group" aria-label="Kind of question">
               <button type="button" data-bt="all" aria-pressed="true">All</button>
               <button type="button" data-bt="mc" aria-pressed="false">Multiple choice, then teach it</button>
+              <button type="button" data-bt="app" aria-pressed="false">Application case</button>
+              <button type="button" data-bt="tf" aria-pressed="false">True or false, then fix it</button>
+              <button type="button" data-bt="ma" aria-pressed="false">Select all that apply</button>
+              <button type="button" data-bt="bd" aria-pressed="false">Explain it from memory</button>
               <button type="button" data-bt="draw" aria-pressed="false">Draw to know it</button>
             </div>
           </div>
@@ -1558,6 +1566,8 @@ body.light{background:var(--white);color:var(--navy)}
   if(new URLSearchParams(location.search).has('setup')){
     /* Instructor setup is for signed-in instructors with an active subscription. Everyone else goes to the sign-in page. */
     hideAll();$('homenav').hidden=false;$('s0').hidden=false;$('s0').classList.add('blocked');document.body.classList.add('signwait');
+    /* the app shortcut is offered to instructors only, so the install details are added on this page and never on student links */
+    try{var ml=document.createElement('link');ml.rel='manifest';ml.href='chalkcast.webmanifest';document.head.appendChild(ml)}catch(e){}
     gate('Checking your sign-in',['One moment.'],[]);
     loadSb().then(function(){return sb.auth.getSession()}).then(function(r){
       var ses=r&&r.data&&r.data.session;
@@ -1615,12 +1625,18 @@ body.light{background:var(--white);color:var(--navy)}
     });
   }
   /* Question bank: loaded only when an instructor opens it, so student links stay light */
-  var BANK_FILE='chalkcast-bank-bio004.js',bankFor=0,bankType='all';
+  var BANK_FILE='chalkcast-bank-bio004.js',BANKS={},bankFor=0,bankType='all';
+  var BTYPE={mc:'Multiple choice, then teach it',app:'Application case',tf:'True or false, then fix it',ma:'Select all that apply',bd:'Explain it from memory',draw:'Draw to know it'};
   var RUBRICS={
     draw:['Shows every part the problem asks for','Labels each part with the correct term','Shows how the parts connect, or the order they go in','Explains the reason behind each step out loud','Uses your own words, not notes'],
-    mc:['Says which answer you chose','Draws a model that supports your choice','Explains why your answer is correct','Explains why one other option does not fit','Uses the correct terms']
+    mc:['Says which answer you chose','Draws a model that supports your choice','Explains why your answer is correct','Explains why one other option does not fit','Uses the correct terms'],
+    app:['States your answer to the case','Draws the mechanism behind it','Connects the findings in the case to the mechanism','Explains the reason behind each step out loud','Uses the correct terms'],
+    tf:['Says whether the statement is true or false','Fixes the statement if it is false','Draws a model that supports your decision','Explains the reason out loud','Uses the correct terms'],
+    ma:['Says every answer you chose','Draws a model that supports your choices','Explains why each choice is correct','Explains why one option you left out does not fit','Uses the correct terms'],
+    bd:['Works from memory, without notes','Names the main idea','Traces each step in order','Explains the cause behind each step out loud','Uses the correct terms']
   };
-  function bankUnits(){return window.CHALKCAST_BANK.units}
+  function bankNow(){return BANKS[BANK_FILE]}
+  function bankUnits(){return bankNow().units}
   function fillBankComps(){
     var u=bankUnits()[+$('bankunit').value],c=$('bankcomp');c.textContent='';
     u.comps.forEach(function(k,j){c.appendChild(el('option',{value:j},k.name))});
@@ -1633,15 +1649,15 @@ body.light{background:var(--white);color:var(--navy)}
     k.items.forEach(function(it){
       if(bankType!=='all'&&it.t!==bankType)return;shown++;
       var a=el('div',{'class':'bitem'});
-      a.appendChild(el('div',{'class':'btag'},it.t==='mc'?'Multiple choice, then teach it':'Draw to know it'));
+      a.appendChild(el('div',{'class':'btag'},BTYPE[it.t]||'Question'));
       a.appendChild(el('p',{'class':'bq'},it.q));
-      if(it.t==='mc'){
-        var d=el('details',{});d.appendChild(el('summary',{},'Answer and explanation (students do not see this)'));
-        d.appendChild(el('p',{},'Answer: '+it.ans));d.appendChild(el('p',{},it.why));a.appendChild(d);
+      if(it.ans){
+        var d=el('details',{});d.appendChild(el('summary',{},(it.t==='bd'?'What a complete answer includes':'Answer and explanation')+' (students do not see this)'));
+        d.appendChild(el('p',{},(it.t==='bd'?'':'Answer: ')+it.ans));if(it.why)d.appendChild(el('p',{},it.why));a.appendChild(d);
       }
       var b=el('button',{type:'button','class':'use'},'Use this question');
       b.addEventListener('click',function(){
-        var w=weeks[bankFor];w.problem=it.q;w.rubric=RUBRICS[it.t].join('\n');
+        var w=weeks[bankFor];w.problem=it.q;w.rubric=(RUBRICS[it.t]||RUBRICS.draw).join('\n');
         if(!w.label||/^Week \d+$/.test(w.label))w.label=k.name.slice(0,60);
         saveWeeks();drawWeeks();$('out').textContent='';$('bank').close();
         say('Question and starter rubric added. You can edit both.');
@@ -1653,18 +1669,32 @@ body.light{background:var(--white);color:var(--navy)}
   }
   function fillBank(){
     var u=$('bankunit');u.textContent='';
-    bankUnits().forEach(function(x,j){u.appendChild(el('option',{value:j},'Week '+x.week+': '+x.system))});
-    $('bankh').textContent='Question bank: '+window.CHALKCAST_BANK.course;
+    bankUnits().forEach(function(x,j){u.appendChild(el('option',{value:j},(x.week!=null?'Week '+x.week+': ':'')+x.system))});
+    $('bankh').textContent='Question bank: '+$('bankcourse').selectedOptions[0].textContent;
+    /* only offer the kinds of question this course's bank has */
+    var have={all:1};bankUnits().forEach(function(x){x.comps.forEach(function(k){k.items.forEach(function(it){have[it.t]=1})})});
+    [].forEach.call(document.querySelectorAll('#bank [data-bt]'),function(b){b.hidden=!have[b.getAttribute('data-bt')]});
+    if(!have[bankType]){bankType='all';[].forEach.call(document.querySelectorAll('#bank [data-bt]'),function(x){x.setAttribute('aria-pressed',x.getAttribute('data-bt')==='all'?'true':'false')})}
     fillBankComps();
+  }
+  function loadBank(){
+    BANK_FILE=$('bankcourse').value;
+    if(BANKS[BANK_FILE]){$('bankmsg').textContent='';fillBank();return}
+    $('banklist').textContent='';$('bankunit').textContent='';$('bankcomp').textContent='';$('bankmsg').textContent='Loading the question bank.';
+    var file=BANK_FILE,sc=document.createElement('script');sc.src=file;window.CHALKCAST_BANK=null;
+    sc.onload=function(){
+      if(window.CHALKCAST_BANK){BANKS[file]=window.CHALKCAST_BANK;window.CHALKCAST_BANK=null;if(file===BANK_FILE){$('bankmsg').textContent='';fillBank()}}
+      else $('bankmsg').textContent='The question bank file loaded, but it has no questions in it.';
+    };
+    sc.onerror=function(){$('bankmsg').textContent='The question bank did not load. Check that '+file+' is in the same folder as this page.'};
+    document.head.appendChild(sc);
   }
   function openBank(i){
     bankFor=i;var d=$('bank');if(d.showModal)d.showModal();else d.setAttribute('open','');
-    if(window.CHALKCAST_BANK){if(!$('bankunit').options.length)fillBank();return}
-    var sc=document.createElement('script');sc.src=BANK_FILE;
-    sc.onload=function(){if(window.CHALKCAST_BANK)fillBank();else $('bankmsg').textContent='The question bank file loaded, but it has no questions in it.'};
-    sc.onerror=function(){$('bankmsg').textContent='The question bank did not load. Check that '+BANK_FILE+' is in the same folder as this page.'};
-    document.head.appendChild(sc);
+    if(bankNow()){if(!$('bankunit').options.length)fillBank();return}
+    loadBank();
   }
+  $('bankcourse').addEventListener('change',loadBank);
   $('bankunit').addEventListener('change',fillBankComps);
   $('bankcomp').addEventListener('change',showBankItems);
   $('bankclose').addEventListener('click',function(){$('bank').close()});
@@ -1672,7 +1702,7 @@ body.light{background:var(--white);color:var(--navy)}
     b.addEventListener('click',function(){
       bankType=b.getAttribute('data-bt');
       [].forEach.call(document.querySelectorAll('#bank [data-bt]'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
-      if(window.CHALKCAST_BANK)showBankItems();
+      if(bankNow())showBankItems();
     });
   });
   function defMsg(title,pts,due,sec,wb){return 'Oral defense required: '+title+'\n\nAn oral defense is a required part of your grade for this assignment.'+(pts?' It is worth '+pts+' points.':'')+'\n'+(due?'Due: '+due+'\n':'')+'Recording time: '+limitWords(sec)+'\n\nWhat to expect\n- Open the link on a computer with a camera and a microphone, in Chrome, Edge, or Safari.\n- You will check your camera'+(wb?', microphone, and whiteboard':' and microphone')+' first.\n- Your question appears when you press Begin Defense, and recording starts at the same moment.\n- You get one attempt, with no pausing or restarting.\n- Recording stops when time runs out. Then download your video and your PDF, and upload both to this assignment.\n\nHow to prepare\n- Study your original assignment and be ready to explain any answer.\n- You do not have to repeat your written answer word for word.\n\nYou will be assessed on\n- Accuracy of your explanation\n- Understanding of the underlying concepts\n- Ability to defend your original answer\n- Application of course concepts\n\nIf you have an approved accommodation or a technical problem, contact me before you begin.\n\nLink: '}
@@ -1812,6 +1842,26 @@ body.light{background:var(--white);color:var(--navy)}
     sb.auth.signOut().then(function(){location.replace('chalkcast-signin.html')});
   });
   $('acctlist').addEventListener('click',function(){if(sb)myLinks()});
+  /* install as an app, so instructors open chalkcast from their dock or desktop instead of hunting for the link */
+  var installEvt=null;
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();installEvt=e});
+  window.addEventListener('appinstalled',function(){installEvt=null;$('install').hidden=true;$('installhelp').textContent='chalkcast is installed. Look for it in your applications, and pin it to your dock or taskbar if you like.'});
+  function standalone(){try{return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true}catch(e){return false}}
+  if(standalone())$('install').hidden=true;
+  $('install').addEventListener('click',function(){
+    var h=$('installhelp'),ua=navigator.userAgent;
+    if(installEvt){
+      installEvt.prompt();
+      installEvt.userChoice.then(function(c){installEvt=null;if(c&&c.outcome!=='accepted')h.textContent='Not installed. Press the button again any time.'});
+      return;
+    }
+    var ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    if(ios)h.textContent='On an iPad or iPhone: tap the Share button, then tap Add to Home Screen.';
+    else if(/Edg\//.test(ua))h.textContent='In Edge: open the menu with the three dots, choose Apps, then choose Install this site as an app. If chalkcast is already installed, open it from your applications.';
+    else if(/Chrome\//.test(ua))h.textContent='In Chrome: open the menu with the three dots, choose Cast, save, and share, then choose Install page as app. If chalkcast is already installed, open it from your applications.';
+    else if(/Safari\//.test(ua))h.textContent='In Safari on a Mac: open the File menu and choose Add to Dock.';
+    else h.textContent='This browser cannot install apps. Open this page in Chrome, Edge, or Safari to install it, or bookmark this page.';
+  });
   function parseCSV(t){
     var rows=[],row=[],cell='',q=false;
     for(var i=0;i<t.length;i++){
