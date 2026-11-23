@@ -192,6 +192,7 @@ html.standalone .fit{max-width:max(680px,calc((100vh - 265px) * 79 / 36 + 142px)
 .gate h2{font-size:26px;font-weight:500;margin:0 0 10px}
 .gate ul{margin:0;padding-left:22px}
 .blocked #start,.blocked .drop{display:none}
+body.signwait #s0 *{visibility:hidden}body.signwait #s0 #gate,body.signwait #s0 #gate *{visibility:visible}
 
 /* instructor setup */
 #s5 .card{max-width:920px}
@@ -553,8 +554,8 @@ body.light{background:var(--white);color:var(--navy)}
           <li>Your entries are saved on this computer only. Save them to a file to move them or share them.</li>
         </ul>
         <div class="acct" role="group" aria-labelledby="accth">
-            <h2 id="accth">Sign in</h2>
-            <p id="acctmsg">Sign in with the email you used to buy chalkcast. We email you a link, so there is no password. When you are signed in, your defense links allow one attempt on any device, and you can see when each link was opened. No student names, videos, or files are stored.</p>
+            <h2 id="accth">Your account</h2>
+            <p id="acctmsg">Your defense links allow one attempt on any device, and you can see when each link was opened. No student names, videos, or files are stored.</p>
             <div id="acctout">
               <label for="acctemail">Your email</label>
               <input type="email" id="acctemail" autocomplete="email" maxlength="120">
@@ -585,8 +586,7 @@ body.light{background:var(--white);color:var(--navy)}
         <div class="defense" role="group" aria-labelledby="defh">
           <h2 id="defh">Assignment defense</h2>
           <p>Ask one student a question about work they already turned in. The question stays hidden until the student presses Begin Defense, and recording starts at the same moment.</p>
-          <p class="hint" id="defsign">Sign in at the top of this page to make defense links that allow one attempt on any device. Without signing in, the one-attempt rule is kept on the student's own device.</p>
-          <label for="dtitle">Assignment title</label>
+                    <label for="dtitle">Assignment title</label>
           <input type="text" id="dtitle" maxlength="80" autocomplete="off">
           <label for="dref">Student reference for your own record (optional). Use initials or an ID. It is not put in the link.</label>
           <input type="text" id="dref" maxlength="40" autocomplete="off">
@@ -1556,8 +1556,22 @@ body.light{background:var(--white);color:var(--navy)}
   function hideAll(){for(var i=0;i<=5;i++)$('s'+i).hidden=true}
   /* hidden entrance: adding ?setup to the address opens this screen. Students never get that address. */
   if(new URLSearchParams(location.search).has('setup')){
-    hideAll();$('s5').hidden=false;$('homenav').hidden=false;
-    loadSb().then(function(){acctShow();sb.auth.onAuthStateChange(function(ev){if(ev==='SIGNED_IN'||ev==='SIGNED_OUT')setTimeout(acctShow,0)})},function(){$('acctmsg').textContent='Sign-in is not available right now. You can still make links below. They keep the one-attempt rule on the student\'s own device.';$('acctout').hidden=true});
+    /* Instructor setup is for signed-in instructors with an active subscription. Everyone else goes to the sign-in page. */
+    hideAll();$('homenav').hidden=false;$('s0').hidden=false;$('s0').classList.add('blocked');document.body.classList.add('signwait');
+    gate('Checking your sign-in',['One moment.'],[]);
+    loadSb().then(function(){return sb.auth.getSession()}).then(function(r){
+      var ses=r&&r.data&&r.data.session;
+      if(!ses){location.replace('chalkcast-signin.html');return}
+      return sb.rpc('my_access').then(function(a){
+        var d=a&&a.data;
+        if(!d||!d.active){location.replace('chalkcast-signin.html');return}
+        try{history.replaceState(null,'',location.pathname+'?setup')}catch(e){}
+        document.body.classList.remove('signwait');closeGate();hideAll();$('s5').hidden=false;acctShow();
+        sb.auth.onAuthStateChange(function(ev){if(ev==='SIGNED_OUT')location.replace('chalkcast-signin.html')});
+      });
+    }).catch(function(){
+      gate('Sign-in is not available right now',['chalkcast could not reach its server.','Check your internet connection, then reload this page.'],[['Reload',function(){location.reload()},true]]);
+    });
   }
   document.querySelectorAll('.leave5').forEach(function(b){
     b.addEventListener('click',function(){
@@ -1795,7 +1809,7 @@ body.light{background:var(--white);color:var(--navy)}
   });
   $('acctoff').addEventListener('click',function(){
     if(!sb)return;
-    sb.auth.signOut().then(function(){$('mylinks').textContent='';acctShow();say('Signed out.')});
+    sb.auth.signOut().then(function(){location.replace('chalkcast-signin.html')});
   });
   $('acctlist').addEventListener('click',function(){if(sb)myLinks()});
   function parseCSV(t){
