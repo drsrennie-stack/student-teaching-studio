@@ -4,7 +4,7 @@
 
 - Project: chalkcast (student whiteboard recording studio)
 - File covered: `teaching-studio.html` (student flow and Instructor setup)
-- Date: November 21, 2026
+- Date: November 22, 2026 (updated for assignment defense, bulk defense links, and the copy lock)
 - Target: WCAG 2.2 Level AA, with AAA contrast where achievable
 
 ## 2. WCAG 2.2 status by criterion
@@ -89,6 +89,8 @@ None performed. No screen reader was available for this review. The markup was c
 | Freehand drawing and shapes need a mouse, finger or stylus | Typed text works by keyboard. Students who cannot use a pointer need an alternative way to complete the assignment through the instructor and DSPS. |
 | The whiteboard PDF is a set of images with no text layer | Add real text for typed items and the rubric page in a later version. |
 | The time limit cannot be extended by the student on their own | Done in part: the instructor can send a time-and-a-half or double-time link. Other multipliers are not offered yet. |
+| In a defense, copy, cut, drag and the right-click menu are turned off on the page | This is on purpose, to protect the question. The question is still read to screen readers through a status message when it appears. A student who relies on copying text into another tool needs an alternative arranged through the instructor and DSPS. |
+| The bulk defense links table can be wide on small screens | The table scrolls sideways inside its own box. It has a caption, column headers and row headers. Checked by keyboard in desktop Chrome only. |
 | Not tested with a screen reader, on iPad, in Safari, or at 200 percent zoom | Test before the tool is offered for sale. |
 
 ## 7. Reviewer

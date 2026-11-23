@@ -1023,6 +1023,12 @@ body.light{background:var(--white);color:var(--navy)}
     var n=rubric.filter(function(r){return r.on}).length;
     $('rubcount').textContent=n+' of '+rubric.length+' covered';
   }
+  /* the question is drawn on the board as a picture, so give screen readers the same words */
+  function readQ(){
+    var n=$('dqsr');
+    if(!n){n=document.createElement('p');n.id='dqsr';n.className='sr';n.setAttribute('role','status');$('stage').parentNode.insertBefore(n,$('stage'))}
+    n.textContent='Your question: '+defense.q;
+  }
   function limitWords(sec){return sec<120?sec+' seconds':(sec/60)+' minutes'}
   function stamp(t){var d=new Date(t);return d.toLocaleDateString()+' '+d.toLocaleTimeString()+' and '+d.getMilliseconds()+' ms'}
   function setupDefense(){
@@ -1272,7 +1278,7 @@ body.light{background:var(--white);color:var(--navy)}
       pages=[{ink:ink,ictx:ictx,strokes:strokes,bg:null,bgBlob:null}];pi=0;updatePager();setZoom(1);
       startRecording();
       if(state!=='rec')return;
-      $('problem').value=defense.q;layoutProblem();
+      $('problem').value=defense.q;layoutProblem();readQ();
       defense.revealAt=defense.recAt=Date.now();defense.used=defense.revealAt;
       try{localStorage.setItem('chalkcast-defense-'+defense.id,String(defense.revealAt))}catch(e){}
       saveBoard();say('Your question is showing and recording has started.');
@@ -1322,6 +1328,14 @@ body.light{background:var(--white);color:var(--navy)}
       e.preventDefault();
       if(state==='rec')defense.events.push([Date.now(),ev==='contextmenu'?'Right-click menu was blocked':ev==='dragstart'?'Drag was blocked':'Copy was blocked']);
     });
+  });
+  /* a page is not told about screenshots. Log the key presses the browser does report. */
+  ['keydown','keyup'].forEach(function(ev){
+    window.addEventListener(ev,function(e){
+      if(!defense||state!=='rec'||e.repeat)return;
+      var k=String(e.key||''),hit=ev==='keyup'?k==='PrintScreen':((e.metaKey&&e.shiftKey&&/^[345sS]$/.test(k))||(e.metaKey&&e.shiftKey&&/^(Digit[345]|KeyS)$/.test(e.code||'')));
+      if(hit)defense.events.push([Date.now(),k==='PrintScreen'?'Print Screen key was pressed':'Screenshot shortcut was pressed']);
+    },true);
   });
   $('pause').addEventListener('click',function(){
     if(defense)return;
@@ -1876,7 +1890,7 @@ body.light{background:var(--white);color:var(--navy)}
           if(mine&&hasRec&&cur===0){
             gate('Your defense recording was saved',['A recording, about '+fmt(r.elapsed||0)+' long'+(r.done?'':' (it stopped when the page closed)'),'It was saved on this device only.','You cannot record again. Download it, turn it in, and tell your instructor what happened.'],[
               ['Get my recording back',function(){
-                closeGate();$('problem').value=defense.q;layoutProblem();restoreBoard(b);
+                closeGate();$('problem').value=defense.q;layoutProblem();readQ();restoreBoard(b);
                 recMeta=r;chunks=parts;elapsed=r.elapsed||0;showResult(parts,r.type||'video/webm');say('Your recording is back. Watch it, then download it.');
               },true]]);
             return;
