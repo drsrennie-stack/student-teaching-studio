@@ -25,7 +25,9 @@ p{margin:0}
 a:focus-visible,button:focus-visible,video:focus-visible{outline:3px solid #C9A14A;outline-offset:3px}
 .hero{background:#060B1A;color:#FFFFFF;padding:56px 0 72px;position:relative;overflow:hidden}
 .hero:before{content:"";position:absolute;inset:0;background:radial-gradient(900px 480px at 88% 110%,rgba(139,58,46,0.38),transparent 70%),radial-gradient(700px 400px at 0% 0%,rgba(201,161,74,0.10),transparent 70%);pointer-events:none}
-.hero .wrap{position:relative}
+.hero:after{content:"";position:absolute;inset:0;background:url(chalkcast-drawings.svg) center/cover no-repeat;pointer-events:none;-webkit-mask-image:linear-gradient(to right,transparent 64%,#000 86%);mask-image:linear-gradient(to right,transparent 64%,#000 86%)}
+@media (max-width:860px){.hero:after{-webkit-mask-image:none;mask-image:none;opacity:.22}}
+.hero .wrap{position:relative;z-index:1}
 .cc-word{display:block;height:52px;width:auto;margin:0 0 26px -4px}
 .hero .eyebrow{color:#D9B45A}
 .hero h1{font-size:clamp(30px,4.4vw,52px);line-height:1.1;font-weight:500;color:#FFFFFF;max-width:16em}

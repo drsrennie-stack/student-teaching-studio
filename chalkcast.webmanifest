@@ -1,8 +1,8 @@
 {
  "name": "chalkcast",
  "short_name": "chalkcast",
- "description": "The student teaching studio. Instructor pages and setup.",
- "start_url": "chalkcast-instructor-home.html",
+ "description": "The student teaching studio. Opens on Instructor setup.",
+ "start_url": "teaching-studio.html?setup",
  "scope": "./",
  "display": "standalone",
  "background_color": "#060B1A",
