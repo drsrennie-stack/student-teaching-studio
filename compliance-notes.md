@@ -96,3 +96,13 @@ None performed. No screen reader was available for this review. The markup was c
 ## 7. Reviewer
 
 Claude (automated checks in desktop Chrome and code review). Not yet reviewed by a person or with assistive technology.
+
+## Update: November 27, 2026
+
+Files covered: chalkcast-legal.html (new), index.html, chalkcast-instructor-home.html, chalkcast-demo.html (footer link added), teaching-studio.html (server-saved student references removed).
+
+- chalkcast-legal.html: one h1, h2 for every section, a labelled "On this page" list, skip link, visible focus on links, link text says when it opens a new tab. Body text #1B2336 on #FFFFFF (about 15:1), links #8B3A2E on #FFFFFF (about 8:1), both pass AAA for normal text. No italics. Iframe height sender included with id chalkcast-legal. Internal links use target="_top".
+- Keyboard: checked that every link is reachable in order and jump links land on the right section. Checked in headless Chrome only.
+- Screen reader: not tested with a screen reader yet. Planned: VoiceOver on Safari.
+- Known limit: the page has not had a legal review.
+- Reviewer: Dr. Sharilyn Rennie (pending)
