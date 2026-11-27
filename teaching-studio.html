@@ -564,7 +564,7 @@ body.light{background:var(--white);color:var(--navy)}
             </div>
             <div id="acctin" hidden>
               <p id="acctwho"></p>
-              <p class="ck"><input type="checkbox" id="saveref"><label for="saveref">Save my student references with my links on the server</label></p>
+              <p id="refnote">Student references stay in the list you download. They are never sent to chalkcast, so match a link to a student with your downloaded list.</p>
               <div class="row"><button type="button" id="install">Install chalkcast on this computer</button><button type="button" id="acctlist">Show my defense links</button><button type="button" id="acctoff">Sign out</button></div>
               <p id="installhelp" role="status" aria-live="polite"></p>
               <div id="mylinks" aria-live="polite"></div>
@@ -1749,7 +1749,7 @@ body.light{background:var(--white);color:var(--navy)}
     return sbLoading;
   }
   function srvLinks(items,o){
-    var keep=$('saveref').checked;
+    var keep=false; /* student references are never sent to the server */
     var rows=items.map(function(it){return{title:o.title,question:it.q,limit_sec:o.sec,whiteboard:!!o.wb,due:o.due||null,course:o.course||null,points:o.pts||null,ref:keep&&it.ref?it.ref:null}});
     return sb.from('defenses').insert(rows).select('code').then(function(res){
       if(res.error)throw res.error;
